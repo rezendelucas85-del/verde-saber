@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-bg-deco{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      pointer-events:none;z-index:0;overflow:hidden;
+    }
+    .leaf{position:absolute;font-size:2.4rem;opacity:.09;}
+    .leaf:nth-child(1){top:5%;left:4%;animation:bounce 6s ease-in-out infinite;}
+    .leaf:nth-child(2){top:12%;right:6%;animation:bounce 7s 1s ease-in-out infinite;}
+    .leaf:nth-child(3){bottom:18%;left:8%;animation:bounce 5s 2s ease-in-out infinite;}
+    .leaf:nth-child(4){bottom:10%;right:5%;animation:bounce 8s .5s ease-in-out infinite;}
+    .leaf:nth-child(5){top:40%;left:2%;animation:bounce 6.5s 3s ease-in-out infinite;}
+    .leaf:nth-child(6){top:55%;right:3%;animation:bounce 7.5s 1.5s ease-in-out infinite;}
+  </style>
+</head>
+<body class="login-page">
+  <div class="login-bg-deco">
+    <span class="leaf">🌿</span>
+    <span class="leaf">🍃</span>
+    <span class="leaf">🍀</span>
+    <span class="leaf">🌱</span>
+    <span class="leaf">🌾</span>
+    <span class="leaf">🌵</span>
+  </div>
+
+  <div style="position:relative;z-index:1;width:100%;max-width:860px;">
+    <div class="login-header">
+      <div class="login-logo">
+        <span class="login-logo-icon">🌱</span>
+        <h1>Verde Saber</h1>
+      </div>
+      <p class="login-tagline">Aprendendo e cuidando da natureza! 🌍</p>
+    </div>
+
+    <div class="login-content">
+      <h2>Quem está aprendendo hoje?</h2>
+      <div class="students-grid" id="studentsGrid"></div>
+      <button class="btn-add-student" onclick="showAddModal()">
+        ➕ &nbsp;Novo Aluno
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Adicionar Aluno -->
+  <div class="modal-overlay" id="addModal" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <h2>✨ Criar Perfil</h2>
+      <div class="avatar-picker">
+        <p>Escolha seu avatar:</p>
+        <div class="avatar-grid" id="avatarGrid"></div>
+      </div>
+      <div class="form-group">
+        <label for="studentNameInput">Seu nome:</label>
+        <input type="text" id="studentNameInput" placeholder="Ex: Maria, João..." maxlength="18" autocomplete="off">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="submitNewStudent()">Criar! 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    const AVATARS = ['🐸','🦋','🐝','🦜','🐢','🦊','🐨','🦔','🐬','🦁','🐧','🦄','🐳','🦒','🐼','🦅'];
+    let selectedAvatar = AVATARS[0];
+
+    function renderStudents() {
+      const grid = document.getElementById('studentsGrid');
+      const students = VS.getStudents();
+      if (students.length === 0) {
+        grid.innerHTML = `<div class="no-students" style="grid-column:1/-1">
+          Nenhum aluno ainda! Clique em <strong>Novo Aluno</strong> para começar. 🌱
+        </div>`;
+        return;
+      }
+      grid.innerHTML = students.map(s => {
+        const stars = Object.values(s.progress?.stories || {}).reduce((t,v) => t+(v.stars||0), 0);
+        const storiesCount = Object.values(s.progress?.stories || {}).filter(v=>v.completed).length;
+        return `<div class="student-card" onclick="login('${s.id}')">
+          <button class="delete-btn" onclick="deleteStudent(event,'${s.id}')" title="Remover">✕</button>
+          <span class="student-avatar">${s.avatar}</span>
+          <span class="student-name">${s.name}</span>
+          <span class="student-level">Nível ${s.level || 1} · 🪙 ${s.coins || 0}</span>
+          <div class="student-stars">${storiesCount > 0 ? '⭐'.repeat(Math.min(stars,5)) : '—'}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function login(id) {
+      VS.setCurrentStudent(id);
+      window.location.href = 'home.html';
+    }
+
+    function deleteStudent(e, id) {
+      e.stopPropagation();
+      if (confirm('Remover este aluno? Todos os dados serão perdidos.')) {
+        VS.deleteStudent(id);
+        renderStudents();
+      }
+    }
+
+    function showAddModal() {
+      selectedAvatar = AVATARS[0];
+      document.getElementById('studentNameInput').value = '';
+      renderAvatarGrid();
+      document.getElementById('addModal').classList.add('active');
+      setTimeout(() => document.getElementById('studentNameInput').focus(), 300);
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').classList.remove('active');
+    }
+    function closeModalOutside(e) {
+      if (e.target === document.getElementById('addModal')) closeModal();
+    }
+
+    function renderAvatarGrid() {
+      document.getElementById('avatarGrid').innerHTML = AVATARS.map(a =>
+        `<button class="avatar-option${a===selectedAvatar?' selected':''}" onclick="selectAvatar('${a}')">${a}</button>`
+      ).join('');
+    }
+
+    function selectAvatar(a) {
+      selectedAvatar = a;
+      renderAvatarGrid();
+    }
+
+    function submitNewStudent() {
+      const name = document.getElementById('studentNameInput').value.trim();
+      if (!name) {
+        document.getElementById('studentNameInput').focus();
+        document.getElementById('studentNameInput').classList.add('shake');
+        setTimeout(() => document.getElementById('studentNameInput').classList.remove('shake'), 500);
+        return;
+      }
+      const student = VS.createStudent(name, selectedAvatar);
+      closeModal();
+      renderStudents();
+      setTimeout(() => login(student.id), 200);
+    }
+
+    document.getElementById('studentNameInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitNewStudent();
+    });
+
+    renderStudents();
+  </script>
+</body>
+</html>

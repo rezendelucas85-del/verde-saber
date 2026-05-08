@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – História</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="back-btn" onclick="confirmBack()">← Voltar</button>
+      <span class="header-title" id="storyTitle">...</span>
+    </div>
+    <div class="student-badge" id="studentBadge" onclick="VS.logout()" title="Sair"></div>
+  </header>
+
+  <div class="story-progress-bar">
+    <div class="story-progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+
+  <main class="story-reader">
+    <div id="storyPages"></div>
+
+    <!-- Tela de conclusão -->
+    <div id="storyComplete" class="story-complete">
+      <span class="trophy">🏆</span>
+      <h2>Parabéns!</h2>
+      <p id="completeMsg">Você concluiu a história!</p>
+      <div class="stars-earned" id="starsEarned">⭐⭐⭐</div>
+      <div class="coins-earned" id="coinsEarned">🪙 +45 moedas ganhas!</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="historias.html" class="btn btn-secondary">📚 Mais Histórias</a>
+        <a href="home.html" class="btn btn-primary">🏠 Início</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    VS.requireAuth();
+    VS.renderHeader(null);
+
+    const params = new URLSearchParams(window.location.search);
+    const storyId = params.get('id');
+    const story = STORIES.find(s => s.id === storyId);
+
+    if (!story) {
+      window.location.href = 'historias.html';
+    }
+
+    document.getElementById('storyTitle').textContent = story.title;
+    document.title = `Verde Saber – ${story.title}`;
+
+    let currentPage = 0;
+    const pages = story.pages;
+
+    function buildPages() {
+      const container = document.getElementById('storyPages');
+      container.innerHTML = pages.map((page, i) => `
+        <div id="page-${i}" class="story-page${i === 0 ? ' active' : ''}">
+          <div class="story-illustration">${page.illustration}</div>
+          <div class="story-text-box"><p>${page.text}</p></div>
+          ${page.type === 'choice' ? `
+            <div class="story-choices">
+              ${page.choices.map(c => `
+                <button class="choice-btn" onclick="makeChoice(${c.next})">${c.text}</button>
+              `).join('')}
+            </div>
+          ` : `
+            <div class="story-nav">
+              ${i > 0 ? `<button class="btn btn-secondary" onclick="goToPage(${i-1})">← Anterior</button>` : `<span></span>`}
+              <span class="story-page-counter">${i+1} / ${pages.length}</span>
+              ${i < pages.length - 1
+                ? `<button class="btn btn-primary" onclick="goToPage(${i+1})">Próxima →</button>`
+                : `<button class="btn btn-primary" onclick="finishStory()">Concluir! 🎉</button>`
+              }
+            </div>
+          `}
+        </div>
+      `).join('');
+    }
+
+    function goToPage(n) {
+      document.getElementById(`page-${currentPage}`)?.classList.remove('active');
+      currentPage = n;
+      document.getElementById(`page-${currentPage}`)?.classList.add('active');
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function makeChoice(nextPage) {
+      goToPage(nextPage);
+    }
+
+    function updateProgress() {
+      const pct = ((currentPage + 1) / pages.length) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    function finishStory() {
+      document.getElementById(`page-${currentPage}`)?.classList.remove('active');
+      const complete = document.getElementById('storyComplete');
+      complete.classList.add('active');
+      const stars = 3;
+      const reward = VS.completeStory(storyId, stars);
+      document.getElementById('starsEarned').textContent = '⭐'.repeat(stars);
+      document.getElementById('coinsEarned').textContent = reward > 0
+        ? `🪙 +${reward} moedas ganhas!`
+        : '🪙 Você já havia concluído essa história!';
+      document.getElementById('completeMsg').textContent = `Você concluiu "${story.title}"!`;
+      document.getElementById('progressFill').style.width = '100%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function confirmBack() {
+      if (currentPage > 0) {
+        if (confirm('Voltar para a lista de histórias? Seu progresso desta leitura não será salvo.')) {
+          window.location.href = 'historias.html';
+        }
+      } else {
+        window.location.href = 'historias.html';
+      }
+    }
+
+    buildPages();
+    updateProgress();
+  </script>
+</body>
+</html>

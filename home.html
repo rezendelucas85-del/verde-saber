@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – Início</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="home.html" class="header-logo">
+      <span class="header-logo-icon">🌱</span>
+      <h1>Verde Saber</h1>
+    </a>
+    <div class="student-badge" id="studentBadge" onclick="VS.logout()" title="Sair"></div>
+  </header>
+
+  <div class="home-hero">
+    <div class="home-welcome" id="homeWelcome">Olá! 👋</div>
+    <p class="home-subtitle">O que vamos aprender hoje?</p>
+    <div class="home-stats">
+      <div class="stat-item">
+        <span class="stat-value" id="statCoins">0</span>
+        <span class="stat-label">🪙 Moedas</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="statStars">0</span>
+        <span class="stat-label">⭐ Estrelas</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="statLevel">1</span>
+        <span class="stat-label">🏆 Nível</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="statStories">0</span>
+        <span class="stat-label">📚 Histórias</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <h2>O que você quer fazer?</h2>
+    <div class="menu-grid">
+      <a href="historias.html" class="menu-card menu-card-stories">
+        <span class="menu-card-icon">📚</span>
+        <span class="menu-card-title">Histórias</span>
+        <span class="menu-card-desc">Aventuras incríveis!</span>
+        <span class="menu-card-badge" id="badgeStories">0/3</span>
+      </a>
+      <a href="jogos.html" class="menu-card menu-card-games">
+        <span class="menu-card-icon">🎮</span>
+        <span class="menu-card-title">Jogos</span>
+        <span class="menu-card-desc">Aprenda brincando!</span>
+        <span class="menu-card-badge">🆕</span>
+      </a>
+      <a href="dicas.html" class="menu-card menu-card-tips">
+        <span class="menu-card-icon">💡</span>
+        <span class="menu-card-title">Dicas Verdes</span>
+        <span class="menu-card-desc">Cuide do planeta!</span>
+      </a>
+      <a href="historias.html" class="menu-card menu-card-nature">
+        <span class="menu-card-icon">🌍</span>
+        <span class="menu-card-title">Natureza</span>
+        <span class="menu-card-desc">Explore e descubra!</span>
+        <span class="menu-card-badge">Em breve</span>
+      </a>
+    </div>
+  </div>
+
+  <nav class="app-footer" id="appFooter"></nav>
+
+  <script src="js/app.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    VS.requireAuth();
+    const s = VS.getCurrentStudent();
+    document.getElementById('homeWelcome').textContent = `Olá, ${s.name}! 👋`;
+    document.getElementById('statCoins').textContent = s.coins || 0;
+    document.getElementById('statStars').textContent = VS.getTotalStars();
+    document.getElementById('statLevel').textContent = s.level || 1;
+    const completed = VS.getCompletedStories();
+    document.getElementById('statStories').textContent = completed;
+    document.getElementById('badgeStories').textContent = `${completed}/${STORIES.length}`;
+    VS.renderHeader('home');
+  </script>
+</body>
+</html>

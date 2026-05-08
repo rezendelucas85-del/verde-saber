@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – Jogos</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="home.html" class="header-logo">
+      <span class="header-logo-icon">🌱</span>
+      <h1>Verde Saber</h1>
+    </a>
+    <div class="student-badge" id="studentBadge" onclick="VS.logout()" title="Sair"></div>
+  </header>
+
+  <div class="page-header">
+    <a href="home.html" class="back-btn">← Início</a>
+    <h1>🎮 Jogos</h1>
+    <p>Aprenda sobre o meio ambiente brincando!</p>
+  </div>
+
+  <div class="games-grid" id="gamesGrid"></div>
+
+  <nav class="app-footer" id="appFooter"></nav>
+
+  <script src="js/app.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    VS.requireAuth();
+    VS.renderHeader('jogos');
+
+    const student = VS.getCurrentStudent();
+    const diffLabel = { easy: 'Fácil', med: 'Médio', hard: 'Difícil' };
+    const diffClass = { easy: 'diff-easy', med: 'diff-med', hard: 'diff-hard' };
+
+    document.getElementById('gamesGrid').innerHTML = GAMES.map(game => {
+      const prog = student.progress?.games?.[game.id];
+      const highScore = prog?.highScore || 0;
+      const played = prog?.played || 0;
+
+      return `
+        <a href="${game.comingSoon ? '#' : game.url}" class="game-card"
+           ${game.comingSoon ? `onclick="alert('Este jogo está em breve! 🚀');return false;"` : ''}>
+          <div class="game-card-banner" style="background:${game.gradient}">
+            <span style="font-size:4.5rem">${game.icon}</span>
+            ${game.comingSoon ? `<span style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.85);border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:800;color:#3949AB">Em Breve</span>` : ''}
+          </div>
+          <div class="game-card-body">
+            <h3>${game.title}</h3>
+            <p>${game.description}</p>
+            <div class="game-card-stats">
+              <span class="diff ${diffClass[game.difficulty]}">${diffLabel[game.difficulty]}</span>
+              ${played > 0 ? `<span class="game-highscore">🏆 ${highScore} pts</span>` : ''}
+              ${!game.comingSoon && played === 0 ? `<span style="background:#C8E6C9;color:#2E7D32;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:800;">Novo!</span>` : ''}
+            </div>
+          </div>
+        </a>`;
+    }).join('');
+  </script>
+</body>
+</html>
