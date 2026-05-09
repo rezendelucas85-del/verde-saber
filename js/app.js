@@ -1,15 +1,39 @@
 const VS = {
-  STUDENTS_KEY: 'vs_students',
   CURRENT_KEY: 'vs_current',
-  TEACHER_KEY: 'vs_teacher',
   TEACHER_SESSION_KEY: 'vs_teacher_session',
+  _db: null,
+  _students: [],
+  _teacher: null,
+
+  async init() {
+    if (typeof firebase === 'undefined') return;
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
+    this._db = firebase.database();
+
+    const [tSnap, sSnap] = await Promise.all([
+      this._db.ref('teacher').once('value'),
+      this._db.ref('students').once('value')
+    ]);
+
+    this._teacher = tSnap.val();
+    const sObj = sSnap.val() || {};
+    this._students = Object.values(sObj);
+
+    // Atualiza dados em tempo real quando outro dispositivo fizer mudanças
+    this._db.ref('students').on('value', snap => {
+      const obj = snap.val() || {};
+      this._students = Object.values(obj);
+    });
+    this._db.ref('teacher').on('value', snap => {
+      this._teacher = snap.val();
+    });
+  },
 
   // ── Alunos ──
   getStudents() {
-    return JSON.parse(localStorage.getItem(this.STUDENTS_KEY) || '[]');
-  },
-  saveStudents(students) {
-    localStorage.setItem(this.STUDENTS_KEY, JSON.stringify(students));
+    return [...this._students];
   },
   getCurrentId() {
     return sessionStorage.getItem(this.CURRENT_KEY);
@@ -17,16 +41,15 @@ const VS = {
   getCurrentStudent() {
     const id = this.getCurrentId();
     if (!id) return null;
-    return this.getStudents().find(s => s.id === id) || null;
+    return this._students.find(s => s.id === id) || null;
   },
   setCurrentStudent(id) {
     sessionStorage.setItem(this.CURRENT_KEY, id);
-    const students = this.getStudents();
-    const i = students.findIndex(s => s.id === id);
-    if (i !== -1) {
-      students[i].lastActive = Date.now();
-      this.saveStudents(students);
+    if (this._db) {
+      this._db.ref(`students/${id}/lastActive`).set(Date.now());
     }
+    const i = this._students.findIndex(s => s.id === id);
+    if (i !== -1) this._students[i].lastActive = Date.now();
   },
   logout() {
     sessionStorage.removeItem(this.CURRENT_KEY);
@@ -39,7 +62,6 @@ const VS = {
   },
 
   createStudent(name, avatar, password) {
-    const students = this.getStudents();
     const student = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -51,40 +73,37 @@ const VS = {
       coins: 0,
       progress: { stories: {}, games: {} }
     };
-    students.push(student);
-    this.saveStudents(students);
+    this._students.push(student);
+    if (this._db) this._db.ref(`students/${student.id}`).set(student);
     return student;
   },
   deleteStudent(id) {
-    this.saveStudents(this.getStudents().filter(s => s.id !== id));
+    this._students = this._students.filter(s => s.id !== id);
+    if (this._db) this._db.ref(`students/${id}`).remove();
   },
   updateStudent(id, updates) {
-    const students = this.getStudents();
-    const i = students.findIndex(s => s.id === id);
+    const i = this._students.findIndex(s => s.id === id);
     if (i !== -1) {
-      students[i] = { ...students[i], ...updates };
-      this.saveStudents(students);
-      return students[i];
+      this._students[i] = { ...this._students[i], ...updates };
+      if (this._db) this._db.ref(`students/${id}`).update(updates);
+      return this._students[i];
     }
     return null;
   },
 
   // ── Professor ──
   getTeacher() {
-    return JSON.parse(localStorage.getItem(this.TEACHER_KEY) || 'null');
+    return this._teacher;
   },
   saveTeacher(data) {
-    localStorage.setItem(this.TEACHER_KEY, JSON.stringify(data));
+    this._teacher = data;
+    if (this._db) this._db.ref('teacher').set(data);
   },
   registerTeacher({ name, email, school, classroom, password }) {
     const teacher = { name, email, school, classroom: classroom || '', password, createdAt: Date.now() };
     this.saveTeacher(teacher);
     this.setTeacherSession();
     return teacher;
-  },
-  updateTeacher(updates) {
-    const teacher = this.getTeacher();
-    if (teacher) this.saveTeacher({ ...teacher, ...updates });
   },
   loginTeacher(email, password) {
     const teacher = this.getTeacher();
@@ -109,16 +128,20 @@ const VS = {
       window.location.href = 'professor.html';
     }
   },
+  updateTeacher(updates) {
+    if (this._teacher) this._teacher = { ...this._teacher, ...updates };
+    if (this._db) this._db.ref('teacher').update(updates);
+  },
 
   // ── Estatísticas da turma ──
   getActiveTodayCount() {
     const today = new Date().toDateString();
-    return this.getStudents().filter(s =>
+    return this._students.filter(s =>
       s.lastActive && new Date(s.lastActive).toDateString() === today
     ).length;
   },
   getTotalStarsAll() {
-    return this.getStudents().reduce((total, s) =>
+    return this._students.reduce((total, s) =>
       total + Object.values(s.progress?.stories || {}).reduce((t, v) => t + (v.stars || 0), 0), 0
     );
   },
@@ -136,9 +159,7 @@ const VS = {
     progress.stories[storyId] = { completed: true, stars, completedAt: Date.now() };
     const newCoins = (student.coins || 0) + reward;
     this.updateStudent(student.id, {
-      progress,
-      coins: newCoins,
-      level: Math.floor(newCoins / 100) + 1
+      progress, coins: newCoins, level: Math.floor(newCoins / 100) + 1
     });
     return reward;
   },
@@ -157,9 +178,7 @@ const VS = {
     const reward = isHighScore ? score * 2 : score;
     const newCoins = (student.coins || 0) + reward;
     this.updateStudent(student.id, {
-      progress,
-      coins: newCoins,
-      level: Math.floor(newCoins / 100) + 1
+      progress, coins: newCoins, level: Math.floor(newCoins / 100) + 1
     });
     return { coinReward: reward, isHighScore };
   },

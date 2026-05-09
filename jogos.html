@@ -25,39 +25,43 @@
 
   <nav class="app-footer" id="appFooter"></nav>
 
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
   <script src="js/app.js"></script>
   <script src="js/data.js"></script>
   <script>
-    VS.requireAuth();
-    VS.renderHeader('jogos');
+    VS.init().then(() => {
+      VS.requireAuth();
+      VS.renderHeader('jogos');
 
-    const student = VS.getCurrentStudent();
-    const diffLabel = { easy: 'Fácil', med: 'Médio', hard: 'Difícil' };
-    const diffClass = { easy: 'diff-easy', med: 'diff-med', hard: 'diff-hard' };
+      const student = VS.getCurrentStudent();
+      const diffLabel = { easy: 'Fácil', med: 'Médio', hard: 'Difícil' };
+      const diffClass  = { easy: 'diff-easy', med: 'diff-med', hard: 'diff-hard' };
 
-    document.getElementById('gamesGrid').innerHTML = GAMES.map(game => {
-      const prog = student.progress?.games?.[game.id];
-      const highScore = prog?.highScore || 0;
-      const played = prog?.played || 0;
-
-      return `
-        <a href="${game.comingSoon ? '#' : game.url}" class="game-card"
-           ${game.comingSoon ? `onclick="alert('Este jogo está em breve! 🚀');return false;"` : ''}>
-          <div class="game-card-banner" style="background:${game.gradient}">
-            <span style="font-size:4.5rem">${game.icon}</span>
-            ${game.comingSoon ? `<span style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.85);border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:800;color:#3949AB">Em Breve</span>` : ''}
-          </div>
-          <div class="game-card-body">
-            <h3>${game.title}</h3>
-            <p>${game.description}</p>
-            <div class="game-card-stats">
-              <span class="diff ${diffClass[game.difficulty]}">${diffLabel[game.difficulty]}</span>
-              ${played > 0 ? `<span class="game-highscore">🏆 ${highScore} pts</span>` : ''}
-              ${!game.comingSoon && played === 0 ? `<span style="background:#C8E6C9;color:#2E7D32;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:800;">Novo!</span>` : ''}
+      document.getElementById('gamesGrid').innerHTML = GAMES.map(game => {
+        const prog = student.progress?.games?.[game.id];
+        const highScore = prog?.highScore || 0;
+        const played = prog?.played || 0;
+        return `
+          <a href="${game.comingSoon ? '#' : game.url}" class="game-card"
+             ${game.comingSoon ? `onclick="alert('Este jogo está em breve! 🚀');return false;"` : ''}>
+            <div class="game-card-banner" style="background:${game.gradient}">
+              <span style="font-size:4.5rem">${game.icon}</span>
+              ${game.comingSoon ? `<span style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.85);border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:800;color:#3949AB">Em Breve</span>` : ''}
             </div>
-          </div>
-        </a>`;
-    }).join('');
+            <div class="game-card-body">
+              <h3>${game.title}</h3>
+              <p>${game.description}</p>
+              <div class="game-card-stats">
+                <span class="diff ${diffClass[game.difficulty]}">${diffLabel[game.difficulty]}</span>
+                ${played > 0 ? `<span class="game-highscore">🏆 ${highScore} pts</span>` : ''}
+                ${!game.comingSoon && played === 0 ? `<span style="background:#C8E6C9;color:#2E7D32;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:800;">Novo!</span>` : ''}
+              </div>
+            </div>
+          </a>`;
+      }).join('');
+    });
   </script>
 </body>
 </html>

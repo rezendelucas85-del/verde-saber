@@ -21,8 +21,6 @@
 
   <main class="story-reader">
     <div id="storyPages"></div>
-
-    <!-- Tela de conclusão -->
     <div id="storyComplete" class="story-complete">
       <span class="trophy">🏆</span>
       <h2>Parabéns!</h2>
@@ -36,29 +34,19 @@
     </div>
   </main>
 
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
   <script src="js/app.js"></script>
   <script src="js/data.js"></script>
   <script>
-    VS.requireAuth();
-    VS.renderHeader(null);
-
-    const params = new URLSearchParams(window.location.search);
-    const storyId = params.get('id');
-    const story = STORIES.find(s => s.id === storyId);
-
-    if (!story) {
-      window.location.href = 'historias.html';
-    }
-
-    document.getElementById('storyTitle').textContent = story.title;
-    document.title = `Verde Saber – ${story.title}`;
-
     let currentPage = 0;
-    const pages = story.pages;
+    let pages = [];
+    let story = null;
+    let storyId = null;
 
     function buildPages() {
-      const container = document.getElementById('storyPages');
-      container.innerHTML = pages.map((page, i) => `
+      document.getElementById('storyPages').innerHTML = pages.map((page, i) => `
         <div id="page-${i}" class="story-page${i === 0 ? ' active' : ''}">
           <div class="story-illustration">${page.illustration}</div>
           <div class="story-text-box"><p>${page.text}</p></div>
@@ -90,9 +78,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function makeChoice(nextPage) {
-      goToPage(nextPage);
-    }
+    function makeChoice(nextPage) { goToPage(nextPage); }
 
     function updateProgress() {
       const pct = ((currentPage + 1) / pages.length) * 100;
@@ -101,8 +87,7 @@
 
     function finishStory() {
       document.getElementById(`page-${currentPage}`)?.classList.remove('active');
-      const complete = document.getElementById('storyComplete');
-      complete.classList.add('active');
+      document.getElementById('storyComplete').classList.add('active');
       const stars = 3;
       const reward = VS.completeStory(storyId, stars);
       document.getElementById('starsEarned').textContent = '⭐'.repeat(stars);
@@ -124,8 +109,22 @@
       }
     }
 
-    buildPages();
-    updateProgress();
+    VS.init().then(() => {
+      VS.requireAuth();
+      VS.renderHeader(null);
+
+      const params = new URLSearchParams(window.location.search);
+      storyId = params.get('id');
+      story = STORIES.find(s => s.id === storyId);
+
+      if (!story) { window.location.href = 'historias.html'; return; }
+
+      document.getElementById('storyTitle').textContent = story.title;
+      document.title = `Verde Saber – ${story.title}`;
+      pages = story.pages;
+      buildPages();
+      updateProgress();
+    });
   </script>
 </body>
 </html>
