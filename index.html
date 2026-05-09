@@ -136,9 +136,25 @@
     </div>
   </div>
 
+  <!-- View: Número da sala -->
+  <div id="viewClassroom" class="eco-card eco-card-col v-hidden">
+    <button class="back-pill" onclick="showView('landing')">← Voltar</button>
+    <div class="eco-logo-sm">🏫</div>
+    <h1 class="eco-title-sm">Qual é sua sala?</h1>
+    <p class="eco-subtitle-sm">Digite o número da sala de aula</p>
+    <div class="form-group" style="width:100%;text-align:left">
+      <label for="classroomInput">Número da sala</label>
+      <input type="text" id="classroomInput" placeholder="Ex: 301"
+             style="font-size:1.3rem;text-align:center;font-weight:800;letter-spacing:3px"
+             autocomplete="off" onkeydown="if(event.key==='Enter')submitClassroom()">
+    </div>
+    <p id="classroomError" class="pwd-error v-hidden">Número incorreto! Tente de novo.</p>
+    <button class="btn-enter-app" onclick="submitClassroom()">Continuar →</button>
+  </div>
+
   <!-- View: Escolha de aluno -->
   <div id="viewStudents" class="eco-card eco-card-col v-hidden">
-    <button class="back-pill" onclick="showView('landing')">← Voltar</button>
+    <button class="back-pill" onclick="backFromStudents()">← Voltar</button>
     <div class="eco-logo-sm">🌍</div>
     <h1 class="eco-title-sm">EcoAmigos</h1>
     <p class="eco-subtitle-sm">Quem está jogando hoje?</p>
@@ -174,8 +190,35 @@
     }
 
     function goStudent() {
+      const teacher = VS.getTeacher();
+      if (teacher && teacher.classroom) {
+        document.getElementById('classroomInput').value = '';
+        document.getElementById('classroomError').classList.add('v-hidden');
+        showView('classroom');
+        setTimeout(() => document.getElementById('classroomInput').focus(), 300);
+      } else {
+        renderAvatars();
+        showView('students');
+      }
+    }
+
+    function submitClassroom() {
+      const teacher = VS.getTeacher();
+      const entered = document.getElementById('classroomInput').value.trim();
+      if (!teacher || entered !== String(teacher.classroom)) {
+        const inp = document.getElementById('classroomInput');
+        inp.classList.add('shake');
+        setTimeout(() => inp.classList.remove('shake'), 500);
+        document.getElementById('classroomError').classList.remove('v-hidden');
+        return;
+      }
       renderAvatars();
       showView('students');
+    }
+
+    function backFromStudents() {
+      const teacher = VS.getTeacher();
+      showView(teacher && teacher.classroom ? 'classroom' : 'landing');
     }
 
     function renderAvatars() {

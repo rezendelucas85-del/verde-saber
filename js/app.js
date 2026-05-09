@@ -76,11 +76,15 @@ const VS = {
   saveTeacher(data) {
     localStorage.setItem(this.TEACHER_KEY, JSON.stringify(data));
   },
-  registerTeacher({ name, email, school, password }) {
-    const teacher = { name, email, school, password, createdAt: Date.now() };
+  registerTeacher({ name, email, school, classroom, password }) {
+    const teacher = { name, email, school, classroom: classroom || '', password, createdAt: Date.now() };
     this.saveTeacher(teacher);
     this.setTeacherSession();
     return teacher;
+  },
+  updateTeacher(updates) {
+    const teacher = this.getTeacher();
+    if (teacher) this.saveTeacher({ ...teacher, ...updates });
   },
   loginTeacher(email, password) {
     const teacher = this.getTeacher();
