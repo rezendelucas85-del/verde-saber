@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>EcoAmigos – Professor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-bg-deco{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+    .leaf{position:absolute;font-size:2.4rem;opacity:.09;}
+    .leaf:nth-child(1){top:5%;left:4%;animation:bounce 6s ease-in-out infinite;}
+    .leaf:nth-child(2){top:12%;right:6%;animation:bounce 7s 1s ease-in-out infinite;}
+    .leaf:nth-child(3){bottom:18%;left:8%;animation:bounce 5s 2s ease-in-out infinite;}
+    .leaf:nth-child(4){bottom:10%;right:5%;animation:bounce 8s .5s ease-in-out infinite;}
+    .leaf:nth-child(5){top:40%;left:2%;animation:bounce 6.5s 3s ease-in-out infinite;}
+    .leaf:nth-child(6){top:55%;right:3%;animation:bounce 7.5s 1.5s ease-in-out infinite;}
+
+    /* ── Auth card ── */
+    .auth-card{
+      background:#fff;border-radius:28px;padding:36px 32px;
+      width:100%;max-width:460px;
+      box-shadow:0 8px 32px rgba(76,175,80,.15);
+      position:relative;z-index:1;
+    }
+    .auth-logo{
+      display:flex;flex-direction:column;align-items:center;
+      text-align:center;margin-bottom:24px;
+    }
+    .auth-logo-circle{
+      width:60px;height:60px;background:var(--primary-dark);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;font-size:2rem;
+      margin-bottom:10px;box-shadow:0 4px 14px rgba(76,175,80,.4);
+    }
+    .auth-logo h1{font-size:1.6rem;font-weight:900;color:var(--primary-dark);margin-bottom:3px;}
+    .auth-logo p{font-size:.88rem;color:var(--text-light);font-weight:600;}
+
+    /* Tabs */
+    .auth-tabs{
+      display:grid;grid-template-columns:1fr 1fr;
+      border:2px solid var(--green-200);border-radius:50px;
+      margin-bottom:24px;overflow:hidden;
+    }
+    .auth-tab{
+      padding:11px;background:transparent;border:none;
+      font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;
+      color:var(--text-light);cursor:pointer;transition:all .2s;
+    }
+    .auth-tab.active{background:var(--green-100);color:var(--primary-dark);}
+    .auth-tab:hover:not(.active){background:var(--green-50);}
+
+    /* Form */
+    .auth-form .form-group{margin-bottom:14px;}
+    .auth-btn{
+      width:100%;padding:14px;margin-top:6px;
+      background:linear-gradient(135deg,#66BB6A,#43A047);
+      border:none;border-radius:50px;
+      font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;
+      color:#fff;cursor:pointer;transition:all .2s;
+      box-shadow:0 4px 14px rgba(76,175,80,.4);
+    }
+    .auth-btn:hover{box-shadow:0 6px 20px rgba(76,175,80,.6);}
+    .auth-btn:active{transform:scale(.97);}
+    .auth-error{
+      color:#e53935;font-size:.85rem;font-weight:700;
+      text-align:center;margin-top:10px;min-height:20px;
+    }
+
+    /* ── Dashboard ── */
+    #dashSection{
+      width:100%;max-width:480px;
+      position:relative;z-index:1;
+      padding-bottom:40px;
+    }
+    .dash-card{
+      background:#fff;border-radius:24px;
+      padding:20px 20px;
+      box-shadow:0 6px 24px rgba(76,175,80,.13);
+      margin-bottom:14px;
+    }
+
+    /* Header */
+    .dash-header{
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .teacher-info{display:flex;align-items:center;gap:12px;}
+    .teacher-initials{
+      width:44px;height:44px;background:var(--primary-dark);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1rem;font-weight:900;color:#fff;flex-shrink:0;
+      box-shadow:0 3px 10px rgba(76,175,80,.4);
+    }
+    .teacher-name{font-size:1rem;font-weight:800;color:var(--text-dark);display:block;}
+    .teacher-school{font-size:.78rem;font-weight:600;color:var(--text-light);display:block;}
+    .btn-sair{
+      background:transparent;border:2px solid var(--green-200);border-radius:20px;
+      padding:8px 16px;font-family:'Nunito',sans-serif;
+      font-size:.85rem;font-weight:800;color:var(--text-dark);cursor:pointer;transition:all .2s;
+    }
+    .btn-sair:hover{background:var(--green-50);}
+
+    /* Stats */
+    .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+    .stat-box{
+      background:#fff;border-radius:18px;padding:16px 10px;text-align:center;
+      box-shadow:0 4px 14px rgba(76,175,80,.1);border:2px solid var(--green-100);
+    }
+    .stat-num{font-size:1.6rem;font-weight:900;color:var(--text-dark);display:block;}
+    .stat-lbl{font-size:.7rem;font-weight:700;color:var(--text-light);display:block;margin-top:2px;}
+
+    /* Turma */
+    .turma-header{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .turma-header h2{font-size:1rem;font-weight:900;color:var(--text-dark);}
+    .btn-novo{
+      background:transparent;border:2px solid var(--green-400);border-radius:20px;
+      padding:8px 16px;font-family:'Nunito',sans-serif;
+      font-size:.82rem;font-weight:800;color:var(--primary-dark);cursor:pointer;transition:all .2s;
+    }
+    .btn-novo:hover{background:var(--green-50);}
+
+    /* Student row */
+    .student-row{
+      background:#fff;border-radius:18px;padding:14px 16px;
+      display:flex;align-items:center;gap:12px;
+      box-shadow:0 3px 12px rgba(76,175,80,.1);
+      border:2px solid var(--green-100);
+      margin-bottom:10px;
+    }
+    .s-avatar{
+      width:44px;height:44px;border-radius:50%;
+      background:var(--green-100);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.6rem;flex-shrink:0;
+    }
+    .s-info{flex:1;min-width:0;}
+    .s-name{font-size:.95rem;font-weight:800;color:var(--text-dark);}
+    .s-meta{font-size:.75rem;font-weight:600;color:var(--text-light);margin:2px 0;}
+    .s-active{color:#43A047;}
+    .s-inactive{color:#aaa;}
+    .s-stars{font-size:.95rem;letter-spacing:1px;}
+    .s-actions{display:flex;gap:6px;flex-shrink:0;}
+    .btn-icon{
+      width:36px;height:36px;border-radius:10px;border:2px solid var(--green-200);
+      background:#fff;cursor:pointer;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;transition:all .2s;
+    }
+    .btn-icon:hover{background:var(--green-50);}
+    .btn-icon.danger:hover{background:#FFEBEE;border-color:#FFCDD2;}
+    .empty-turma{
+      text-align:center;padding:28px 0;
+      color:var(--text-light);font-size:.9rem;font-weight:600;line-height:1.7;
+    }
+
+    /* Modal */
+    .modal-overlay{
+      display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,.5);z-index:1000;
+      align-items:center;justify-content:center;
+      backdrop-filter:blur(4px);
+    }
+    .modal-overlay.active{display:flex;}
+    .modal{
+      background:#fff;border-radius:24px;padding:28px 28px;
+      max-width:420px;width:90%;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      animation:modalIn .3s ease;
+    }
+    @keyframes modalIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+    .modal h2{font-size:1.3rem;font-weight:900;color:var(--primary-dark);margin-bottom:20px;}
+    .modal .form-group{margin-bottom:14px;}
+    .modal-avatar-label{font-weight:700;font-size:.9rem;color:var(--text-dark);margin-bottom:10px;display:block;}
+    .modal-avatar-grid{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px;
+    }
+    .modal-avatar-opt{
+      aspect-ratio:1;font-size:1.7rem;background:var(--green-50);
+      border:3px solid transparent;border-radius:12px;
+      cursor:pointer;transition:all .2s;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .modal-avatar-opt:hover{background:var(--green-100);}
+    .modal-avatar-opt.selected{border-color:var(--primary);background:var(--green-100);transform:scale(1.1);}
+    .modal-footer{display:flex;gap:10px;justify-content:flex-end;}
+    .btn-cancel{
+      padding:11px 22px;border-radius:50px;background:var(--green-100);
+      border:none;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;
+      color:var(--text-dark);cursor:pointer;transition:all .2s;
+    }
+    .btn-cancel:hover{background:var(--green-200);}
+    .btn-save{
+      padding:11px 22px;border-radius:50px;
+      background:linear-gradient(135deg,#66BB6A,#43A047);
+      border:none;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;
+      color:#fff;cursor:pointer;transition:all .2s;
+      box-shadow:0 3px 10px rgba(76,175,80,.35);
+    }
+    .btn-save:hover{box-shadow:0 5px 16px rgba(76,175,80,.55);}
+
+    .v-hidden{display:none!important;}
+  </style>
+</head>
+<body class="login-page">
+  <div class="login-bg-deco">
+    <span class="leaf">🌿</span><span class="leaf">🍃</span>
+    <span class="leaf">🍀</span><span class="leaf">🌱</span>
+    <span class="leaf">🌾</span><span class="leaf">🌵</span>
+  </div>
+
+  <!-- ── Auth ── -->
+  <div id="authSection" class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-circle">🌍</div>
+      <h1>EcoAmigos</h1>
+      <p>Área do Professor</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Cadastrar</button>
+    </div>
+
+    <!-- Login form -->
+    <div id="formLogin" class="auth-form">
+      <div class="form-group">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" placeholder="professor@escola.com" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="loginPwd">Senha</label>
+        <input type="password" id="loginPwd" placeholder="••••••"
+               onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="auth-btn" onclick="doLogin()">Entrar</button>
+      <p id="loginError" class="auth-error"></p>
+    </div>
+
+    <!-- Register form -->
+    <div id="formRegister" class="auth-form v-hidden">
+      <div class="form-group">
+        <label for="regName">Nome completo</label>
+        <input type="text" id="regName" placeholder="Seu nome" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="regEmail">E-mail</label>
+        <input type="email" id="regEmail" placeholder="professor@escola.com">
+      </div>
+      <div class="form-group">
+        <label for="regSchool">Escola</label>
+        <input type="text" id="regSchool" placeholder="Nome da escola">
+      </div>
+      <div class="form-group">
+        <label for="regPwd">Senha</label>
+        <input type="password" id="regPwd" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="form-group">
+        <label for="regPwd2">Confirmar senha</label>
+        <input type="password" id="regPwd2" placeholder="Repita a senha"
+               onkeydown="if(event.key==='Enter')doRegister()">
+      </div>
+      <button class="auth-btn" onclick="doRegister()">Criar conta</button>
+      <p id="registerError" class="auth-error"></p>
+    </div>
+  </div>
+
+  <!-- ── Dashboard ── -->
+  <div id="dashSection" class="v-hidden">
+
+    <!-- Header -->
+    <div class="dash-card">
+      <div class="dash-header">
+        <div class="teacher-info">
+          <div class="teacher-initials" id="teacherInitials">PR</div>
+          <div>
+            <span class="teacher-name" id="teacherName">Professor</span>
+            <span class="teacher-school" id="teacherSchool"></span>
+          </div>
+        </div>
+        <button class="btn-sair" onclick="doLogout()">Sair</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-num" id="statCount">0</span>
+        <span class="stat-lbl">Alunos</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num" id="statActive">0</span>
+        <span class="stat-lbl">Ativos hoje</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num" id="statStars">0</span>
+        <span class="stat-lbl">Estrelas total</span>
+      </div>
+    </div>
+
+    <!-- Turma -->
+    <div class="dash-card" style="margin-top:14px">
+      <div class="turma-header">
+        <h2>Minha turma</h2>
+        <button class="btn-novo" onclick="openModal()">+ Novo aluno</button>
+      </div>
+      <div id="studentsList"></div>
+    </div>
+
+  </div>
+
+  <!-- Modal: adicionar / editar aluno -->
+  <div class="modal-overlay" id="studentModal" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <h2 id="modalTitle">Adicionar aluno</h2>
+      <div class="form-group">
+        <label for="modalName">Nome do aluno</label>
+        <input type="text" id="modalName" placeholder="Nome completo" maxlength="24" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="modalPwd">Senha do aluno</label>
+        <input type="text" id="modalPwd" placeholder="Senha simples (ex: 1234)" autocomplete="off">
+      </div>
+      <span class="modal-avatar-label">Avatar</span>
+      <div class="modal-avatar-grid" id="modalAvatarGrid"></div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-save" onclick="saveStudent()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    const AVATARS = ['🐸','🦋','🌻','🦊','🐬','🐢','🐹','🐧','🐝','🦜'];
+    let modalMode = 'add';
+    let editStudentId = null;
+    let selectedAvatar = AVATARS[0];
+
+    // ── Auth ──
+    function switchTab(tab) {
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+      document.getElementById('formLogin').classList.toggle('v-hidden', tab !== 'login');
+      document.getElementById('formRegister').classList.toggle('v-hidden', tab !== 'register');
+      document.getElementById('loginError').textContent = '';
+      document.getElementById('registerError').textContent = '';
+    }
+
+    function doLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pwd   = document.getElementById('loginPwd').value;
+      if (!email || !pwd) {
+        document.getElementById('loginError').textContent = 'Preencha e-mail e senha.';
+        return;
+      }
+      if (VS.loginTeacher(email, pwd)) {
+        showDashboard();
+      } else {
+        document.getElementById('loginError').textContent = 'E-mail ou senha incorretos.';
+      }
+    }
+
+    function doRegister() {
+      const name   = document.getElementById('regName').value.trim();
+      const email  = document.getElementById('regEmail').value.trim();
+      const school = document.getElementById('regSchool').value.trim();
+      const pwd    = document.getElementById('regPwd').value;
+      const pwd2   = document.getElementById('regPwd2').value;
+      const errEl  = document.getElementById('registerError');
+
+      if (!name || !email || !pwd) { errEl.textContent = 'Preencha todos os campos.'; return; }
+      if (pwd.length < 6)           { errEl.textContent = 'Senha precisa ter ao menos 6 caracteres.'; return; }
+      if (pwd !== pwd2)             { errEl.textContent = 'As senhas não coincidem.'; return; }
+
+      VS.registerTeacher({ name, email, school, password: pwd });
+      showDashboard();
+    }
+
+    function doLogout() {
+      VS.logoutTeacher();
+    }
+
+    // ── Dashboard ──
+    function showDashboard() {
+      document.getElementById('authSection').classList.add('v-hidden');
+      document.getElementById('dashSection').classList.remove('v-hidden');
+      const teacher = VS.getTeacher();
+      if (teacher) {
+        const initials = teacher.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+        document.getElementById('teacherInitials').textContent = initials;
+        document.getElementById('teacherName').textContent = teacher.name;
+        document.getElementById('teacherSchool').textContent = teacher.school || '';
+      }
+      renderDashboard();
+    }
+
+    function renderDashboard() {
+      const students = VS.getStudents();
+      document.getElementById('statCount').textContent  = students.length;
+      document.getElementById('statActive').textContent = VS.getActiveTodayCount();
+      document.getElementById('statStars').textContent  = VS.getTotalStarsAll();
+
+      const list = document.getElementById('studentsList');
+      if (students.length === 0) {
+        list.innerHTML = `<div class="empty-turma">
+          Nenhum aluno ainda.<br>Clique em <strong>+ Novo aluno</strong> para começar.
+        </div>`;
+        return;
+      }
+
+      const today = new Date().toDateString();
+      list.innerHTML = students.map(s => {
+        const stars = VS.getStudentStars(s);
+        const isActive = s.lastActive && new Date(s.lastActive).toDateString() === today;
+        const starsHtml = Array.from({length: 5}, (_, i) =>
+          `<span style="color:${i < stars ? '#FFB300' : '#DDD'}">★</span>`
+        ).join('');
+        return `
+        <div class="student-row">
+          <div class="s-avatar">${s.avatar}</div>
+          <div class="s-info">
+            <div class="s-name">${s.name}</div>
+            <div class="s-meta">
+              Senha: ${s.password || '—'} &nbsp;·&nbsp;
+              <span class="${isActive ? 's-active' : 's-inactive'}">
+                ${isActive ? '● Ativo' : '○ Inativo'}
+              </span>
+            </div>
+            <div class="s-stars">${starsHtml}</div>
+          </div>
+          <div class="s-actions">
+            <button class="btn-icon" onclick="editStudent('${s.id}')" title="Editar">✏️</button>
+            <button class="btn-icon danger" onclick="removeStudent('${s.id}')" title="Remover">🗑️</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function editStudent(id) {
+      const s = VS.getStudents().find(st => st.id === id);
+      if (!s) return;
+      modalMode = 'edit';
+      editStudentId = id;
+      selectedAvatar = s.avatar;
+      document.getElementById('modalTitle').textContent = 'Editar aluno';
+      document.getElementById('modalName').value = s.name;
+      document.getElementById('modalPwd').value  = s.password || '';
+      renderModalAvatars();
+      document.getElementById('studentModal').classList.add('active');
+    }
+
+    function removeStudent(id) {
+      const s = VS.getStudents().find(st => st.id === id);
+      if (!s) return;
+      if (confirm(`Remover ${s.name}? Todos os dados serão perdidos.`)) {
+        VS.deleteStudent(id);
+        renderDashboard();
+      }
+    }
+
+    // ── Modal ──
+    function openModal() {
+      modalMode = 'add';
+      editStudentId = null;
+      selectedAvatar = AVATARS[0];
+      document.getElementById('modalTitle').textContent = 'Adicionar aluno';
+      document.getElementById('modalName').value = '';
+      document.getElementById('modalPwd').value  = '';
+      renderModalAvatars();
+      document.getElementById('studentModal').classList.add('active');
+      setTimeout(() => document.getElementById('modalName').focus(), 300);
+    }
+
+    function closeModal() {
+      document.getElementById('studentModal').classList.remove('active');
+    }
+
+    function closeModalOutside(e) {
+      if (e.target === document.getElementById('studentModal')) closeModal();
+    }
+
+    function renderModalAvatars() {
+      document.getElementById('modalAvatarGrid').innerHTML = AVATARS.map(a =>
+        `<button class="modal-avatar-opt${a === selectedAvatar ? ' selected' : ''}"
+                 onclick="pickAvatar('${a}')">${a}</button>`
+      ).join('');
+    }
+
+    function pickAvatar(a) {
+      selectedAvatar = a;
+      renderModalAvatars();
+    }
+
+    function saveStudent() {
+      const name = document.getElementById('modalName').value.trim();
+      const pwd  = document.getElementById('modalPwd').value.trim();
+      if (!name) {
+        document.getElementById('modalName').classList.add('shake');
+        setTimeout(() => document.getElementById('modalName').classList.remove('shake'), 500);
+        document.getElementById('modalName').focus();
+        return;
+      }
+      if (modalMode === 'add') {
+        VS.createStudent(name, selectedAvatar, pwd);
+      } else {
+        VS.updateStudent(editStudentId, { name, avatar: selectedAvatar, password: pwd });
+      }
+      closeModal();
+      renderDashboard();
+    }
+
+    // ── Init ──
+    if (VS.isTeacherLogged()) {
+      showDashboard();
+    } else {
+      // Se não há professor cadastrado, abre aba de cadastro por padrão
+      if (!VS.getTeacher()) {
+        switchTab('register');
+      }
+    }
+  </script>
+</body>
+</html>

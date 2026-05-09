@@ -1,7 +1,10 @@
 const VS = {
   STUDENTS_KEY: 'vs_students',
   CURRENT_KEY: 'vs_current',
+  TEACHER_KEY: 'vs_teacher',
+  TEACHER_SESSION_KEY: 'vs_teacher_session',
 
+  // ── Alunos ──
   getStudents() {
     return JSON.parse(localStorage.getItem(this.STUDENTS_KEY) || '[]');
   },
@@ -18,6 +21,12 @@ const VS = {
   },
   setCurrentStudent(id) {
     sessionStorage.setItem(this.CURRENT_KEY, id);
+    const students = this.getStudents();
+    const i = students.findIndex(s => s.id === id);
+    if (i !== -1) {
+      students[i].lastActive = Date.now();
+      this.saveStudents(students);
+    }
   },
   logout() {
     sessionStorage.removeItem(this.CURRENT_KEY);
@@ -29,13 +38,15 @@ const VS = {
     }
   },
 
-  createStudent(name, avatar) {
+  createStudent(name, avatar, password) {
     const students = this.getStudents();
     const student = {
       id: Date.now().toString(),
       name: name.trim(),
       avatar,
+      password: password || '',
       createdAt: Date.now(),
+      lastActive: null,
       level: 1,
       coins: 0,
       progress: { stories: {}, games: {} }
@@ -58,6 +69,60 @@ const VS = {
     return null;
   },
 
+  // ── Professor ──
+  getTeacher() {
+    return JSON.parse(localStorage.getItem(this.TEACHER_KEY) || 'null');
+  },
+  saveTeacher(data) {
+    localStorage.setItem(this.TEACHER_KEY, JSON.stringify(data));
+  },
+  registerTeacher({ name, email, school, password }) {
+    const teacher = { name, email, school, password, createdAt: Date.now() };
+    this.saveTeacher(teacher);
+    this.setTeacherSession();
+    return teacher;
+  },
+  loginTeacher(email, password) {
+    const teacher = this.getTeacher();
+    if (teacher && teacher.email === email && teacher.password === password) {
+      this.setTeacherSession();
+      return true;
+    }
+    return false;
+  },
+  setTeacherSession() {
+    sessionStorage.setItem(this.TEACHER_SESSION_KEY, '1');
+  },
+  isTeacherLogged() {
+    return sessionStorage.getItem(this.TEACHER_SESSION_KEY) === '1';
+  },
+  logoutTeacher() {
+    sessionStorage.removeItem(this.TEACHER_SESSION_KEY);
+    window.location.href = 'index.html';
+  },
+  requireTeacherAuth() {
+    if (!this.isTeacherLogged()) {
+      window.location.href = 'professor.html';
+    }
+  },
+
+  // ── Estatísticas da turma ──
+  getActiveTodayCount() {
+    const today = new Date().toDateString();
+    return this.getStudents().filter(s =>
+      s.lastActive && new Date(s.lastActive).toDateString() === today
+    ).length;
+  },
+  getTotalStarsAll() {
+    return this.getStudents().reduce((total, s) =>
+      total + Object.values(s.progress?.stories || {}).reduce((t, v) => t + (v.stars || 0), 0), 0
+    );
+  },
+  getStudentStars(s) {
+    return Object.values(s.progress?.stories || {}).reduce((t, v) => t + (v.stars || 0), 0);
+  },
+
+  // ── Progresso do aluno ──
   completeStory(storyId, stars) {
     const student = this.getCurrentStudent();
     if (!student) return 0;
@@ -94,7 +159,6 @@ const VS = {
     });
     return { coinReward: reward, isHighScore };
   },
-
   getTotalStars() {
     const s = this.getCurrentStudent();
     if (!s) return 0;
