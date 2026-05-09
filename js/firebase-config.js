@@ -1,11 +1,9 @@
-// Cole aqui os dados do seu projeto Firebase
-// (Project Settings → Your apps → SDK setup → Config)
 const FIREBASE_CONFIG = {
-  apiKey: "COLE_AQUI",
-  authDomain: "COLE_AQUI",
-  databaseURL: "COLE_AQUI",
-  projectId: "COLE_AQUI",
-  storageBucket: "COLE_AQUI",
-  messagingSenderId: "COLE_AQUI",
-  appId: "COLE_AQUI"
+  apiKey: "AIzaSyDX8yP55K0iy3uYoK5mwD8siQWLc3f87hU",
+  authDomain: "ecoamigos-cd6ec.firebaseapp.com",
+  databaseURL: "https://ecoamigos-cd6ec-default-rtdb.firebaseio.com",
+  projectId: "ecoamigos-cd6ec",
+  storageBucket: "ecoamigos-cd6ec.firebasestorage.app",
+  messagingSenderId: "1071191326590",
+  appId: "1:1071191326590:web:83c70e77d475e39201fd2f"
 };
