@@ -6,14 +6,15 @@
   <title>Verde Saber – Professor</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .login-bg-deco{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
-    .leaf{position:absolute;font-size:2.4rem;opacity:.09;}
-    .leaf:nth-child(1){top:5%;left:4%;animation:bounce 6s ease-in-out infinite;}
-    .leaf:nth-child(2){top:12%;right:6%;animation:bounce 7s 1s ease-in-out infinite;}
-    .leaf:nth-child(3){bottom:18%;left:8%;animation:bounce 5s 2s ease-in-out infinite;}
-    .leaf:nth-child(4){bottom:10%;right:5%;animation:bounce 8s .5s ease-in-out infinite;}
-    .leaf:nth-child(5){top:40%;left:2%;animation:bounce 6.5s 3s ease-in-out infinite;}
-    .leaf:nth-child(6){top:55%;right:3%;animation:bounce 7.5s 1.5s ease-in-out infinite;}
+    body.login-page{
+      background:url('img/floresta2.png') center/cover no-repeat fixed;
+    }
+    body.login-page::before{
+      content:'';position:fixed;inset:0;
+      background:rgba(10,20,5,.45);
+      z-index:0;
+    }
+    .login-bg-deco{display:none;}
 
     /* ── Auth card ── */
     .auth-card{
