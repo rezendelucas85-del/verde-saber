@@ -209,6 +209,65 @@ const RECYCLING_ITEMS = [
   { emoji: '🍎', name: 'Núcleo de maçã', category: 'organico', hint: 'Restos de frutas são orgânicos!' }
 ];
 
+const MEDALS = [
+  {
+    id: 'reciclador',
+    icon: '♻️',
+    title: 'Reciclador Estreante',
+    desc: 'Jogou o Jogo da Reciclagem',
+    check: s => (s.progress?.games?.reciclagem?.played || 0) > 0
+  },
+  {
+    id: 'primeiro_capitulo',
+    icon: '📖',
+    title: 'Primeiro Capítulo',
+    desc: 'Leu a primeira história',
+    check: s => Object.keys(s.progress?.stories || {}).length >= 1
+  },
+  {
+    id: 'amigo_animais',
+    icon: '🐾',
+    title: 'Amigo dos Animais',
+    desc: 'Leu "O Rio que Chorava"',
+    check: s => !!s.progress?.stories?.rio?.completed
+  },
+  {
+    id: 'maos_terra',
+    icon: '🌱',
+    title: 'Mãos na Terra',
+    desc: 'Leu "A Missão da Abelha Bela"',
+    check: s => !!s.progress?.stories?.abelha?.completed
+  },
+  {
+    id: 'eco_heroi',
+    icon: '🌍',
+    title: 'Eco Herói',
+    desc: 'Completou todas as histórias',
+    check: s => ['floresta','rio','abelha'].every(id => s.progress?.stories?.[id]?.completed)
+  },
+  {
+    id: 'leitor_dedicado',
+    icon: '🏆',
+    title: 'Leitor Dedicado',
+    desc: 'Todas as histórias com 3 estrelas',
+    check: s => ['floresta','rio','abelha'].every(id => (s.progress?.stories?.[id]?.stars || 0) >= 3)
+  },
+  {
+    id: 'guardiao_oceano',
+    icon: '🌊',
+    title: 'Guardião do Oceano',
+    desc: '90+ pontos na Reciclagem',
+    check: s => (s.progress?.games?.reciclagem?.highScore || 0) >= 90
+  },
+  {
+    id: 'explorador',
+    icon: '🦋',
+    title: 'Explorador Completo',
+    desc: 'Conquistou 6 ou mais medalhas',
+    check: s => MEDALS.slice(0, 7).filter(m => m.check(s)).length >= 6
+  }
+];
+
 const TIPS = [
   { icon: '💧', title: 'Economize Água', text: 'Feche a torneira enquanto escova os dentes. Isso economiza até 12 litros de água por vez!' },
   { icon: '♻️', title: 'Separe o Lixo', text: 'Separe o lixo em orgânico, plástico, papel, vidro e metal. Facilita a reciclagem e ajuda o planeta!' },

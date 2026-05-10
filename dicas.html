@@ -33,6 +33,7 @@
   <script>
     VS.init().then(() => {
       VS.requireAuth();
+      VS.trackTipsVisit();
       VS.renderHeader('dicas');
 
       const colors = [

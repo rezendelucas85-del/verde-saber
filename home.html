@@ -58,11 +58,11 @@
         <span class="menu-card-title">Dicas Verdes</span>
         <span class="menu-card-desc">Cuide do planeta!</span>
       </a>
-      <a href="historias.html" class="menu-card menu-card-nature">
-        <span class="menu-card-icon">🌍</span>
-        <span class="menu-card-title">Natureza</span>
-        <span class="menu-card-desc">Explore e descubra!</span>
-        <span class="menu-card-badge">Em breve</span>
+      <a href="conquistas.html" class="menu-card menu-card-achievements">
+        <span class="menu-card-icon">🏅</span>
+        <span class="menu-card-title">Conquistas</span>
+        <span class="menu-card-desc">Suas medalhas!</span>
+        <span class="menu-card-badge" id="badgeMedals">0/8</span>
       </a>
     </div>
   </div>
@@ -85,6 +85,8 @@
       const completed = VS.getCompletedStories();
       document.getElementById('statStories').textContent = completed;
       document.getElementById('badgeStories').textContent = `${completed}/${STORIES.length}`;
+      const earnedMedals = VS.getStudentMedals(s).filter(m => m.earned).length;
+      document.getElementById('badgeMedals').textContent = `${earnedMedals}/8`;
       VS.renderHeader('home');
     });
   </script>

@@ -192,6 +192,28 @@ const VS = {
     if (!s) return 0;
     return Object.values(s.progress?.stories || {}).filter(v => v.completed).length;
   },
+  getStudentMedals(student) {
+    const s = student || this.getCurrentStudent();
+    if (!s) return [];
+    return MEDALS.map(m => ({ ...m, earned: m.check(s) }));
+  },
+  getStudentProgressData(student) {
+    const s = student || this.getCurrentStudent();
+    if (!s) return { stories: 0, storiesTotal: 3, games: 0, gamesTotal: 1, tips: 0, tipsTotal: 1 };
+    const stories = Object.values(s.progress?.stories || {}).filter(v => v.completed).length;
+    const games = (s.progress?.games?.reciclagem?.played || 0) > 0 ? 1 : 0;
+    const tips = s.progress?.tips?.visited ? 1 : 0;
+    return { stories, storiesTotal: 3, games, gamesTotal: 1, tips, tipsTotal: 1 };
+  },
+  trackTipsVisit() {
+    const student = this.getCurrentStudent();
+    if (!student || student.progress?.tips?.visited) return;
+    const progress = { ...(student.progress || { stories: {}, games: {} }) };
+    if (!progress.tips) progress.tips = {};
+    progress.tips.visited = true;
+    progress.tips.visitedAt = Date.now();
+    this.updateStudent(student.id, { progress });
+  },
 
   renderHeader(activePage) {
     const s = this.getCurrentStudent();
@@ -199,7 +221,8 @@ const VS = {
       { href: 'home.html', icon: '🏠', label: 'Início', id: 'home' },
       { href: 'historias.html', icon: '📚', label: 'Histórias', id: 'historias' },
       { href: 'jogos.html', icon: '🎮', label: 'Jogos', id: 'jogos' },
-      { href: 'dicas.html', icon: '💡', label: 'Dicas', id: 'dicas' }
+      { href: 'dicas.html', icon: '💡', label: 'Dicas', id: 'dicas' },
+      { href: 'conquistas.html', icon: '🏅', label: 'Conquistas', id: 'conquistas' }
     ];
     document.getElementById('studentBadge').innerHTML = s
       ? `<span class="badge-avatar">${s.avatar}</span><span>${s.name}</span>`

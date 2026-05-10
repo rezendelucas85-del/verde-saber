@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – Conquistas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="home.html" class="header-logo">
+      <span class="header-logo-icon">🌱</span>
+      <h1>Verde Saber</h1>
+    </a>
+    <div class="student-badge" id="studentBadge" onclick="VS.logout()" title="Sair"></div>
+  </header>
+
+  <div class="page-header">
+    <a href="home.html" class="back-btn">← Início</a>
+    <h1>🏅 Conquistas</h1>
+    <p>Seu progresso e medalhas!</p>
+  </div>
+
+  <div class="conquistas-container" id="conquistasContent"></div>
+
+  <nav class="app-footer" id="appFooter"></nav>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    VS.init().then(() => {
+      VS.requireAuth();
+      VS.renderHeader('conquistas');
+
+      const student = VS.getCurrentStudent();
+      const prog = VS.getStudentProgressData(student);
+      const medals = VS.getStudentMedals(student);
+      const earnedCount = medals.filter(m => m.earned).length;
+
+      const bars = [
+        { label: '📚 Histórias', val: prog.stories, total: prog.storiesTotal, color: 'linear-gradient(90deg,#66BB6A,#43A047)' },
+        { label: '🎮 Jogos',     val: prog.games,   total: prog.gamesTotal,   color: 'linear-gradient(90deg,#FFD54F,#FFA000)' },
+        { label: '💡 Dicas',    val: prog.tips,    total: prog.tipsTotal,    color: 'linear-gradient(90deg,#F48FB1,#E91E63)' }
+      ];
+
+      document.getElementById('conquistasContent').innerHTML = `
+        <div class="conq-section">
+          <h2 class="conq-section-title">📊 Meu Progresso</h2>
+          <div class="cat-progress-list">
+            ${bars.map(c => `
+              <div class="cat-progress-item">
+                <div class="cat-progress-header">
+                  <span>${c.label}</span>
+                  <span class="cat-progress-count">${c.val}/${c.total}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" style="width:${c.total > 0 ? Math.round(c.val/c.total*100) : 0}%;background:${c.color}"></div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <div class="conq-section">
+          <h2 class="conq-section-title">🏅 Medalhas <span class="medals-count-badge">${earnedCount}/8</span></h2>
+          <div class="medals-grid">
+            ${medals.map(m => `
+              <div class="medal-card ${m.earned ? 'earned' : 'locked'}">
+                <div class="medal-icon">${m.earned ? m.icon : '🔒'}</div>
+                <div class="medal-info">
+                  <div class="medal-title">${m.title}</div>
+                  <div class="medal-desc">${m.desc}</div>
+                </div>
+                ${m.earned ? '<span class="medal-check">✅</span>' : ''}
+              </div>`).join('')}
+          </div>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
