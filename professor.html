@@ -447,27 +447,26 @@
         return;
       }
 
-      const today = new Date().toDateString();
       list.innerHTML = students.map(s => {
         const stars = VS.getStudentStars(s);
-        const isActive = s.lastActive && new Date(s.lastActive).toDateString() === today;
-        const starsHtml = Array.from({length: 5}, (_, i) =>
-          `<span style="color:${i < stars ? '#FFB300' : '#DDD'}">★</span>`
-        ).join('');
+        const prog = VS.getStudentProgressData(s);
+        const totalAct = prog.stories + prog.games + prog.tips;
+        const maxAct   = prog.storiesTotal + prog.gamesTotal + prog.tipsTotal;
+        const pct      = maxAct > 0 ? Math.round(totalAct / maxAct * 100) : 0;
+        const starsStr = stars > 0 ? ' · ' + '⭐'.repeat(Math.min(stars, 5)) : '';
         return `
         <div class="student-row">
           <div class="s-avatar">${s.avatar}</div>
           <div class="s-info">
             <div class="s-name">${s.name}</div>
-            <div class="s-meta">
-              Senha: ${s.password || '—'} &nbsp;·&nbsp;
-              <span class="${isActive ? 's-active' : 's-inactive'}">
-                ${isActive ? '● Ativo' : '○ Inativo'}
-              </span>
+            <div class="s-meta">${totalAct} atividades${starsStr}</div>
+            <div style="background:var(--green-100);border-radius:6px;height:6px;overflow:hidden;margin-top:5px">
+              <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#66BB6A,#43A047);border-radius:6px"></div>
             </div>
-            <div class="s-stars">${starsHtml}</div>
           </div>
           <div class="s-actions">
+            <a href="progresso-turma.html?student=${s.id}" class="btn-icon" title="Ver progresso"
+               style="text-decoration:none;display:flex;align-items:center;justify-content:center">📊</a>
             <button class="btn-icon" onclick="editStudent('${s.id}')" title="Editar">✏️</button>
             <button class="btn-icon danger" onclick="removeStudent('${s.id}')" title="Remover">🗑️</button>
           </div>

@@ -28,85 +28,73 @@
   <script src="js/app.js"></script>
   <script src="js/data.js"></script>
   <script>
-    function formatDate(ts) {
-      return ts ? new Date(ts).toLocaleDateString('pt-BR') : '—';
-    }
-
-    function renderProgressBars(prog) {
-      const bars = [
-        { label: '📚 Histórias', val: prog.stories, total: prog.storiesTotal, color: 'linear-gradient(90deg,#66BB6A,#43A047)' },
-        { label: '🎮 Jogos',    val: prog.games,   total: prog.gamesTotal,   color: 'linear-gradient(90deg,#FFD54F,#FFA000)' },
-        { label: '💡 Dicas',   val: prog.tips,    total: prog.tipsTotal,    color: 'linear-gradient(90deg,#F48FB1,#E91E63)' }
-      ];
-      return `<div class="conq-section">
-        <h2 class="conq-section-title">📊 Progresso por Categoria</h2>
-        <div class="cat-progress-list">
-          ${bars.map(c => `
-            <div class="cat-progress-item">
-              <div class="cat-progress-header">
-                <span>${c.label}</span>
-                <span class="cat-progress-count">${c.val}/${c.total}</span>
-              </div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-fill" style="width:${c.total > 0 ? Math.round(c.val/c.total*100) : 0}%;background:${c.color}"></div>
-              </div>
-            </div>`).join('')}
+    function renderStatBoxes(prog, stars) {
+      return `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+        <div class="detail-stat-box">
+          <span class="detail-stat-num">${prog.stories}</span>
+          <span class="detail-stat-lbl">Histórias</span>
+        </div>
+        <div class="detail-stat-box">
+          <span class="detail-stat-num">${prog.games}</span>
+          <span class="detail-stat-lbl">Jogos</span>
+        </div>
+        <div class="detail-stat-box">
+          <span class="detail-stat-num">${stars}</span>
+          <span class="detail-stat-lbl">Estrelas</span>
         </div>
       </div>`;
     }
 
-    function renderMedalsSection(medals, earnedCount) {
-      return `<div class="conq-section">
-        <h2 class="conq-section-title">🏅 Medalhas <span class="medals-count-badge">${earnedCount}/8</span></h2>
-        <div class="medals-grid">
-          ${medals.map(m => `
-            <div class="medal-card ${m.earned ? 'earned' : 'locked'}">
-              <div class="medal-icon">${m.earned ? m.icon : '🔒'}</div>
-              <div class="medal-info">
-                <div class="medal-title">${m.title}</div>
-                <div class="medal-desc">${m.desc}</div>
-              </div>
-              ${m.earned ? '<span class="medal-check">✅</span>' : ''}
-            </div>`).join('')}
-        </div>
-      </div>`;
-    }
-
-    function renderActivities(s) {
+    function renderActivitiesList(s) {
       const storyRows = STORIES.map(story => {
-        const sv = s.progress?.stories?.[story.id];
-        const done = !!sv?.completed;
-        const detail = done
-          ? '⭐'.repeat(sv.stars || 0) + ' · ' + formatDate(sv.completedAt)
-          : 'Não concluída';
-        return `<div class="activity-row ${done ? 'done' : 'pending'}">
-          <span class="activity-status">${done ? '✅' : '⬜'}</span>
-          <span class="activity-name">${story.icon} ${story.title}</span>
-          <span class="activity-detail">${detail}</span>
+        const done = !!s.progress?.stories?.[story.id]?.completed;
+        return `<div class="activity-item">
+          <span class="activity-item-icon">📖</span>
+          <span class="activity-item-name">${story.title}</span>
+          <span class="activity-badge ${done ? 'badge-done' : 'badge-pending'}">${done ? 'Feito' : 'Pendente'}</span>
         </div>`;
       }).join('');
 
       const gameRows = GAMES.filter(g => !g.comingSoon).map(game => {
-        const gv = s.progress?.games?.[game.id];
-        const done = (gv?.played || 0) > 0;
-        const detail = done
-          ? '🏆 ' + gv.highScore + ' pts · ' + gv.played + 'x · ' + formatDate(gv.lastPlayed)
-          : 'Não jogado';
-        return `<div class="activity-row ${done ? 'done' : 'pending'}">
-          <span class="activity-status">${done ? '✅' : '⬜'}</span>
-          <span class="activity-name">${game.icon} ${game.title}</span>
-          <span class="activity-detail">${detail}</span>
+        const done = (s.progress?.games?.[game.id]?.played || 0) > 0;
+        return `<div class="activity-item">
+          <span class="activity-item-icon">🎮</span>
+          <span class="activity-item-name">${game.title}</span>
+          <span class="activity-badge ${done ? 'badge-done' : 'badge-pending'}">${done ? 'Feito' : 'Pendente'}</span>
         </div>`;
       }).join('');
 
+      const tipsDone = !!s.progress?.tips?.visited;
+      const tipsRow = `<div class="activity-item">
+        <span class="activity-item-icon">🍃</span>
+        <span class="activity-item-name">Curiosidades ambientais</span>
+        <span class="activity-badge ${tipsDone ? 'badge-done' : 'badge-pending'}">${tipsDone ? 'Feito' : 'Pendente'}</span>
+      </div>`;
+
       return `<div class="conq-section">
-        <h2 class="conq-section-title">📋 Atividades</h2>
-        <div class="activities-list">
-          <div class="activity-group-title">📚 Histórias</div>
-          ${storyRows}
-          <div class="activity-group-title" style="margin-top:10px">🎮 Jogos</div>
-          ${gameRows}
+        <h2 class="conq-section-title">Atividades</h2>
+        <div class="activities-clean-list">
+          ${storyRows}${gameRows}${tipsRow}
         </div>
+      </div>`;
+    }
+
+    function renderProgressByCategory(prog) {
+      const cats = [
+        { label: 'Histórias',    val: prog.stories, total: prog.storiesTotal },
+        { label: 'Jogos',        val: prog.games,   total: prog.gamesTotal   },
+        { label: 'Curiosidades', val: prog.tips,    total: prog.tipsTotal    }
+      ];
+      return `<div class="conq-section">
+        <h2 class="conq-section-title">Progresso por categoria</h2>
+        ${cats.map(c => `
+          <div class="cat-horiz-row">
+            <span class="cat-horiz-label">${c.label}</span>
+            <div class="progress-bar-wrap" style="flex:1">
+              <div class="progress-bar-fill" style="width:${c.total > 0 ? Math.round(c.val/c.total*100) : 0}%;background:linear-gradient(90deg,#66BB6A,#43A047)"></div>
+            </div>
+            <span class="cat-horiz-count">${c.val}/${c.total}</span>
+          </div>`).join('')}
       </div>`;
     }
 
@@ -116,6 +104,7 @@
       document.getElementById('headerBack').onclick = () => window.location.href = 'professor.html';
       document.getElementById('headerBack').textContent = '← Painel';
       document.getElementById('headerTitle').textContent = '📊 Progresso da Turma';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function showDetailView(studentId) {
@@ -130,28 +119,12 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       const prog = VS.getStudentProgressData(s);
-      const medals = VS.getStudentMedals(s);
-      const earnedCount = medals.filter(m => m.earned).length;
       const stars = VS.getStudentStars(s);
-      const today = new Date().toDateString();
-      const isActive = s.lastActive && new Date(s.lastActive).toDateString() === today;
-      const statusClass = isActive ? 'detail-status-active' : 'detail-status-inactive';
-      const statusText = isActive
-        ? '● Ativo hoje'
-        : '○ ' + (s.lastActive ? 'Último acesso: ' + formatDate(s.lastActive) : 'Nunca acessou');
 
       document.getElementById('detailContent').innerHTML =
-        `<div class="detail-student-card">
-          <div class="detail-avatar">${s.avatar}</div>
-          <div class="detail-info">
-            <div class="detail-name">${s.name}</div>
-            <div class="detail-meta">Nível ${s.level || 1} · 🪙 ${s.coins || 0} moedas · ⭐ ${stars} estrelas</div>
-            <div class="${statusClass}">${statusText}</div>
-          </div>
-        </div>` +
-        renderProgressBars(prog) +
-        renderMedalsSection(medals, earnedCount) +
-        renderActivities(s);
+        renderStatBoxes(prog, stars) +
+        renderActivitiesList(s) +
+        renderProgressByCategory(prog);
     }
 
     VS.init().then(() => {
@@ -170,20 +143,27 @@
         return;
       }
 
+      // Verifica se veio direto com ?student=id (link do professor.html)
+      const params = new URLSearchParams(window.location.search);
+      const directStudent = params.get('student');
+      if (directStudent) {
+        showDetailView(directStudent);
+        return;
+      }
+
       listEl.innerHTML = students.map(s => {
-        const medals = VS.getStudentMedals(s);
-        const earnedCount = medals.filter(m => m.earned).length;
         const prog = VS.getStudentProgressData(s);
-        const totalActivities = prog.stories + prog.games + prog.tips;
-        const maxActivities = prog.storiesTotal + prog.gamesTotal + prog.tipsTotal;
-        const pct = maxActivities > 0 ? Math.round(totalActivities / maxActivities * 100) : 0;
-        const stars = VS.getStudentStars(s);
+        const totalAct = prog.stories + prog.games + prog.tips;
+        const maxAct   = prog.storiesTotal + prog.gamesTotal + prog.tipsTotal;
+        const pct      = maxAct > 0 ? Math.round(totalAct / maxAct * 100) : 0;
+        const stars    = VS.getStudentStars(s);
+        const medals   = VS.getStudentMedals(s).filter(m => m.earned).length;
         return `
           <div class="student-prog-row" onclick="showDetailView('${s.id}')">
             <div class="sprow-avatar">${s.avatar}</div>
             <div class="sprow-info">
               <div class="sprow-name">${s.name}</div>
-              <div class="sprow-meta">🏅 ${earnedCount} medalhas · ⭐ ${stars} estrelas · ${totalActivities}/${maxActivities} atividades</div>
+              <div class="sprow-meta">🏅 ${medals} medalhas · ⭐ ${stars} estrelas · ${totalAct}/${maxAct} atividades</div>
               <div class="sprow-bar-wrap">
                 <div class="sprow-bar-fill" style="width:${pct}%"></div>
               </div>
