@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – Memória dos Animais</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .mem-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#fff;border-bottom:2px solid var(--green-200);}
+    .mem-stat{text-align:center;}
+    .mem-stat-val{font-size:1.4rem;font-weight:900;color:var(--primary-dark);display:block;}
+    .mem-stat-lbl{font-size:.72rem;font-weight:700;color:var(--text-light);}
+    .mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px;max-width:500px;margin:0 auto;}
+    .mem-card{aspect-ratio:1;cursor:pointer;perspective:600px;}
+    .mem-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .35s;}
+    .mem-card.flipped .mem-card-inner,.mem-card.matched .mem-card-inner{transform:rotateY(180deg);}
+    .mem-card-front,.mem-card-back{position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;}
+    .mem-card-front{background:linear-gradient(135deg,#4CAF50,#2E7D32);font-size:1.6rem;font-weight:900;color:rgba(255,255,255,.5);border:3px solid #388E3C;box-shadow:0 3px 8px rgba(0,0,0,.15);}
+    .mem-card-back{background:#fff;border:3px solid #A5D6A7;transform:rotateY(180deg);font-size:2.3rem;box-shadow:0 3px 8px rgba(0,0,0,.1);}
+    .mem-card.matched .mem-card-back{background:#E8F5E9;border-color:#66BB6A;}
+    .mem-card.wrong .mem-card-inner{animation:wrongShake .4s ease;}
+    @keyframes wrongShake{0%,100%{transform:rotateY(180deg)}25%{transform:rotateY(180deg) translateX(-5px)}75%{transform:rotateY(180deg) translateX(5px)}}
+
+    .fact-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+    .fact-overlay.hidden{display:none;}
+    .fact-card{background:#fff;border-radius:24px;padding:28px 24px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:popIn .3s ease;}
+    @keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+    .fact-emoji{font-size:4rem;margin-bottom:8px;}
+    .fact-name{font-size:1.3rem;font-weight:900;color:var(--text-dark);margin-bottom:6px;}
+    .fact-badge{font-size:.75rem;font-weight:800;background:#FFE0B2;color:#E65100;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;}
+    .fact-text{font-size:.9rem;font-weight:600;color:#555;line-height:1.6;margin-bottom:18px;}
+
+    .mem-complete{display:none;text-align:center;padding:40px 20px 80px;}
+    .mem-complete.active{display:block;}
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="jogos.html" class="back-btn">← Jogos</a>
+      <span class="header-title">🦁 Memória dos Animais</span>
+    </div>
+    <div class="student-badge" id="studentBadge" onclick="VS.logout()" title="Sair"></div>
+  </header>
+
+  <div class="mem-topbar">
+    <div class="mem-stat">
+      <span class="mem-stat-val" id="statMoves">0</span>
+      <span class="mem-stat-lbl">Jogadas</span>
+    </div>
+    <div class="mem-stat">
+      <span class="mem-stat-val" id="statPairs">0/8</span>
+      <span class="mem-stat-lbl">Pares</span>
+    </div>
+    <button class="btn btn-secondary" style="padding:8px 14px;font-size:.85rem" onclick="startGame()">🔄 Novo</button>
+  </div>
+
+  <div id="memGrid" class="mem-grid"></div>
+
+  <div id="factOverlay" class="fact-overlay hidden" onclick="closeFact()">
+    <div class="fact-card" onclick="event.stopPropagation()">
+      <div class="fact-emoji" id="factEmoji"></div>
+      <div class="fact-name" id="factName"></div>
+      <div class="fact-badge" id="factBadge"></div>
+      <p class="fact-text" id="factText"></p>
+      <button class="btn btn-primary" onclick="closeFact()">Legal! 👍</button>
+    </div>
+  </div>
+
+  <div id="memComplete" class="mem-complete">
+    <span style="font-size:4rem;display:block;margin-bottom:12px">🏆</span>
+    <h2 style="font-size:1.8rem;color:var(--text-dark);margin-bottom:8px">Parabéns!</h2>
+    <p style="color:var(--text-light);font-weight:600;margin-bottom:6px">Você encontrou todos os pares!</p>
+    <p style="font-size:1.1rem;font-weight:800;color:var(--primary-dark);margin-bottom:24px">Em <span id="finalMoves"></span> jogadas</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="startGame()">🔄 Jogar Novamente</button>
+      <a href="jogos.html" class="btn btn-primary">🎮 Outros Jogos</a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    const ANIMALS = [
+      { emoji: '🦁', name: 'Leão',            status: 'Vulnerável',             fact: 'O leão é o único felino que vive em grupos chamados manadas! Cada grupo tem um macho e várias fêmeas.' },
+      { emoji: '🐘', name: 'Elefante Africano',status: 'Ameaçado',              fact: 'Os elefantes têm memória excepcional e nunca esquecem os amigos. Eles vivem até 70 anos!' },
+      { emoji: '🦒', name: 'Girafa',           status: 'Vulnerável',             fact: 'A girafa é o animal mais alto do mundo! Sua língua azul-escura pode medir 50 cm.' },
+      { emoji: '🐆', name: 'Onça-pintada',     status: 'Vulnerável',             fact: 'A onça-pintada é o maior felino das Américas. Cada uma tem pintas únicas, como impressões digitais!' },
+      { emoji: '🦜', name: 'Arara Azul',       status: 'Vulnerável',             fact: 'A arara-azul-grande só existe no Brasil e pode viver mais de 60 anos. É uma das mais inteligentes!' },
+      { emoji: '🐊', name: 'Jacaré-do-Pantanal',status:'Pouco preocupante',     fact: 'O jacaré-do-pantanal ajuda a controlar a população de peixes e é essencial para o equilíbrio do rio!' },
+      { emoji: '🦋', name: 'Borboleta Morpho', status: 'Monitorada',             fact: 'As asas da Morpho brilham em azul sem ter pigmento azul! É um efeito de luz chamado iridescência.' },
+      { emoji: '🐢', name: 'Tartaruga Marinha', status: 'Criticamente ameaçada', fact: 'A tartaruga marinha existe há 100 milhões de anos e pode mergulhar a mais de 1000 metros!' }
+    ];
+
+    let cards = [], flipped = [], matched = 0, moves = 0, locked = false;
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startGame() {
+      cards = shuffle([...ANIMALS, ...ANIMALS]);
+      flipped = []; matched = 0; moves = 0; locked = false;
+      document.getElementById('statMoves').textContent = 0;
+      document.getElementById('statPairs').textContent = '0/8';
+      document.getElementById('memComplete').classList.remove('active');
+      document.getElementById('memGrid').style.display = 'grid';
+      renderGrid();
+    }
+
+    function renderGrid() {
+      document.getElementById('memGrid').innerHTML = cards.map((c, i) =>
+        '<div class="mem-card" id="mc-' + i + '" onclick="flipCard(' + i + ')">' +
+          '<div class="mem-card-inner">' +
+            '<div class="mem-card-front">🌿</div>' +
+            '<div class="mem-card-back">' + c.emoji + '</div>' +
+          '</div>' +
+        '</div>'
+      ).join('');
+    }
+
+    function flipCard(i) {
+      if (locked) return;
+      const el = document.getElementById('mc-' + i);
+      if (el.classList.contains('flipped') || el.classList.contains('matched')) return;
+      el.classList.add('flipped');
+      flipped.push(i);
+      if (flipped.length === 2) {
+        locked = true;
+        moves++;
+        document.getElementById('statMoves').textContent = moves;
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [a, b] = flipped;
+      if (cards[a].emoji === cards[b].emoji) {
+        matched++;
+        document.getElementById('statPairs').textContent = matched + '/8';
+        setTimeout(() => {
+          document.getElementById('mc-' + a).classList.add('matched');
+          document.getElementById('mc-' + b).classList.add('matched');
+          flipped = [];
+          showFact(cards[a]);
+        }, 400);
+      } else {
+        const ea = document.getElementById('mc-' + a);
+        const eb = document.getElementById('mc-' + b);
+        ea.classList.add('wrong'); eb.classList.add('wrong');
+        setTimeout(() => {
+          ea.classList.remove('flipped', 'wrong');
+          eb.classList.remove('flipped', 'wrong');
+          flipped = []; locked = false;
+        }, 1000);
+      }
+    }
+
+    function showFact(animal) {
+      document.getElementById('factEmoji').textContent = animal.emoji;
+      document.getElementById('factName').textContent = animal.name;
+      document.getElementById('factBadge').textContent = '🔴 ' + animal.status;
+      document.getElementById('factText').textContent = animal.fact;
+      document.getElementById('factOverlay').classList.remove('hidden');
+    }
+
+    function closeFact() {
+      document.getElementById('factOverlay').classList.add('hidden');
+      locked = false;
+      if (matched === 8) {
+        setTimeout(() => {
+          document.getElementById('memGrid').style.display = 'none';
+          document.getElementById('finalMoves').textContent = moves;
+          document.getElementById('memComplete').classList.add('active');
+          VS.saveGameScore('memoria', Math.max(0, 800 - moves * 10));
+        }, 200);
+      }
+    }
+
+    VS.init().then(() => {
+      VS.requireAuth();
+      VS.renderHeader(null);
+      startGame();
+    });
+  </script>
+</body>
+</html>

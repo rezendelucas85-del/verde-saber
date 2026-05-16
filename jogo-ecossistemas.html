@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verde Saber – Quebra-Cabeça Ambiental</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .eco-topbar{display:flex;justify-content:space-around;padding:12px 16px;background:#fff;border-bottom:2px solid var(--green-200);}
+    .eco-stat{text-align:center;}
+    .eco-stat-val{font-size:1.4rem;font-weight:900;color:var(--primary-dark);display:block;}
+    .eco-stat-lbl{font-size:.72rem;font-weight:700;color:var(--text-light);}
+
+    .card-stage{display:flex;flex-direction:column;align-items:center;padding:24px 20px 16px;}
+    .animal-card{
+      background:#fff;border-radius:24px;border:4px solid #1a1a1a;
+      padding:28px 24px;max-width:280px;width:100%;
+      text-align:center;box-shadow:5px 5px 0 rgba(0,0,0,.15);
+      margin-bottom:20px;
+    }
+    .animal-card-emoji{font-size:5rem;display:block;margin-bottom:10px;}
+    .animal-card-name{font-size:1.3rem;font-weight:900;color:var(--text-dark);margin-bottom:6px;}
+    .animal-card-hint{font-size:.85rem;font-weight:600;color:var(--text-light);line-height:1.5;}
+
+    .question-label{font-size:.95rem;font-weight:800;color:var(--text-dark);margin-bottom:16px;}
+    .eco-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;}
+    .eco-btn{
+      display:flex;align-items:center;gap:12px;
+      padding:14px 20px;border-radius:16px;
+      border:3px solid var(--green-200);background:#fff;
+      font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;
+      color:var(--text-dark);cursor:pointer;transition:all .2s;
+      text-align:left;
+    }
+    .eco-btn:hover{border-color:var(--primary);background:var(--green-50);transform:translateX(6px);}
+    .eco-btn .eco-btn-icon{font-size:1.8rem;flex-shrink:0;}
+    .eco-btn.correct{background:#E8F5E9;border-color:#4CAF50;animation:correctPulse .4s ease;}
+    .eco-btn.wrong{background:#FFEBEE;border-color:#EF5350;animation:wrongShake .4s ease;}
+    @keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    @keyframes wrongShake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-8px)}50%{transform:translateX(8px)}}
+
+    .feedback-bar{
+      min-height:36px;text-align:center;
+      font-size:.9rem;font-weight:800;
+      padding:0 20px 8px;
+    }
+    .feedback-bar.correct{color:#2E7D32;}
+    .feedback-bar.wrong{color:#C62828;}
+
+    .progress-dots{display:flex;gap:6px;justify-content:center;padding:0 20px 16px;}
+    .prog-dot{width:12px;height:12px;border-radius:50%;background:var(--green-100);border:2px solid var(--green-200);}
+    .prog-dot.done-ok{background:#4CAF50;border-color:#2E7D32;}
+    .prog-dot.done-err{background:#EF5350;border-color:#C62828;}
+    .prog-dot.current{background:var(--primary);border-color:var(--primary-dark);transform:scale(1.3);}
+
+    .eco-complete{display:none;text-align:center;padding:40px 20px 80px;}
+    .eco-complete.active{display:block;}
+    .score-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:280px;margin:0 auto 24px;}
+    .score-box{background:#fff;border-radius:16px;padding:16px;box-shadow:0 3px 10px var(--shadow);}
+    .score-box-val{font-size:2rem;font-weight:900;display:block;}
+    .score-box-lbl{font-size:.78rem;font-weight:700;color:var(--text-light);}
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="jogos.html" class="back-btn">← Jogos</a>
+      <span class="header-title">🧩 Quebra-Cabeça Ambiental</span>
+    </div>
+    <div class="student-badge" id="studentBadge" onclick="VS.logout()" title="Sair"></div>
+  </header>
+
+  <div class="eco-topbar">
+    <div class="eco-stat">
+      <span class="eco-stat-val" id="eScore">0</span>
+      <span class="eco-stat-lbl">Pontos</span>
+    </div>
+    <div class="eco-stat">
+      <span class="eco-stat-val" id="eCorrect">0</span>
+      <span class="eco-stat-lbl">Acertos</span>
+    </div>
+    <div class="eco-stat">
+      <span class="eco-stat-val" id="eProgress">1/12</span>
+      <span class="eco-stat-lbl">Progresso</span>
+    </div>
+  </div>
+
+  <div class="progress-dots" id="progressDots"></div>
+
+  <div id="gameStage" class="card-stage">
+    <div class="animal-card">
+      <span class="animal-card-emoji" id="cardEmoji"></span>
+      <div class="animal-card-name" id="cardName"></div>
+      <div class="animal-card-hint" id="cardHint"></div>
+    </div>
+    <p class="question-label">A qual ecossistema pertence?</p>
+    <div class="eco-btns" id="ecoBtns"></div>
+    <div class="feedback-bar" id="feedbackBar"></div>
+  </div>
+
+  <div id="ecoComplete" class="eco-complete">
+    <span style="font-size:4rem;display:block;margin-bottom:12px">🌍</span>
+    <h2 style="font-size:1.8rem;color:var(--text-dark);margin-bottom:16px">Muito bem!</h2>
+    <div class="score-breakdown">
+      <div class="score-box">
+        <span class="score-box-val" style="color:#2E7D32" id="finalCorrect"></span>
+        <span class="score-box-lbl">Acertos</span>
+      </div>
+      <div class="score-box">
+        <span class="score-box-val" style="color:#C62828" id="finalWrong"></span>
+        <span class="score-box-lbl">Erros</span>
+      </div>
+    </div>
+    <p style="font-size:1.3rem;font-weight:900;color:var(--primary-dark);margin-bottom:24px"><span id="finalScore"></span> pontos</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="startGame()">🔄 Jogar Novamente</button>
+      <a href="jogos.html" class="btn btn-primary">🎮 Outros Jogos</a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+    const ECOSYSTEMS = [
+      { id: 'amazonia',      label: 'Amazônia',      icon: '🌿', color: '#2E7D32' },
+      { id: 'cerrado',       label: 'Cerrado',        icon: '🌵', color: '#E65100' },
+      { id: 'mata_atlantica',label: 'Mata Atlântica', icon: '🌊', color: '#1565C0' }
+    ];
+
+    const ITEMS = [
+      { emoji: '🦜', name: 'Arara Azul',       eco: 'amazonia',      hint: 'Vive nas florestas tropicais e é símbolo do Brasil' },
+      { emoji: '🐒', name: 'Macaco-Aranha',     eco: 'amazonia',      hint: 'Usa a cauda como um 5º braço para se pendurar' },
+      { emoji: '🐍', name: 'Anaconda',          eco: 'amazonia',      hint: 'É a cobra mais pesada do mundo, vive perto de rios' },
+      { emoji: '🌺', name: 'Vitória-Régia',     eco: 'amazonia',      hint: 'Planta aquática gigante do Rio Amazonas' },
+      { emoji: '🦅', name: 'Ema',               eco: 'cerrado',       hint: 'A maior ave do Brasil! Não voa, mas corre muito rápido' },
+      { emoji: '🦊', name: 'Lobo-Guará',        eco: 'cerrado',       hint: 'O maior canídeo da América do Sul, tem pernas altas' },
+      { emoji: '🌻', name: 'Ipê-Amarelo',       eco: 'cerrado',       hint: 'A árvore nacional do Brasil floresce em agosto' },
+      { emoji: '🐜', name: 'Tamanduá-Bandeira', eco: 'cerrado',       hint: 'Come até 35.000 insetos por dia com a língua pegajosa' },
+      { emoji: '🐸', name: 'Perereca Verde',    eco: 'mata_atlantica',hint: 'Respira e bebe água pela pele! Indicador de ambiente saudável' },
+      { emoji: '🦋', name: 'Borboleta Morpho',  eco: 'mata_atlantica',hint: 'Suas asas brilham sem ter pigmento azul — é magia da luz!' },
+      { emoji: '🌿', name: 'Bromelia',          eco: 'mata_atlantica',hint: 'Guarda água nas folhas e vira lar de sapos e insetos' },
+      { emoji: '🐦', name: 'Tucano-Toco',       eco: 'mata_atlantica',hint: 'O bico enorme serve para regular a temperatura do corpo' }
+    ];
+
+    let queue, current, score, correct, wrong, results, locked;
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startGame() {
+      queue = shuffle([...ITEMS]);
+      current = 0; score = 0; correct = 0; wrong = 0;
+      results = [];
+      locked = false;
+      document.getElementById('ecoComplete').classList.remove('active');
+      document.getElementById('gameStage').style.display = 'flex';
+      renderDots();
+      showCard();
+    }
+
+    function renderDots() {
+      document.getElementById('progressDots').innerHTML = ITEMS.map((_, i) => {
+        let cls = 'prog-dot';
+        if (i < current) cls += results[i] ? ' done-ok' : ' done-err';
+        else if (i === current) cls += ' current';
+        return '<div class="' + cls + '"></div>';
+      }).join('');
+    }
+
+    function showCard() {
+      const item = queue[current];
+      document.getElementById('cardEmoji').textContent = item.emoji;
+      document.getElementById('cardName').textContent = item.name;
+      document.getElementById('cardHint').textContent = item.hint;
+      document.getElementById('eProgress').textContent = (current + 1) + '/12';
+      document.getElementById('eScore').textContent = score;
+      document.getElementById('eCorrect').textContent = correct;
+      document.getElementById('feedbackBar').textContent = '';
+      document.getElementById('feedbackBar').className = 'feedback-bar';
+
+      document.getElementById('ecoBtns').innerHTML = ECOSYSTEMS.map(e =>
+        '<button class="eco-btn" id="ebtn-' + e.id + '" onclick="answer(\'' + e.id + '\')">' +
+          '<span class="eco-btn-icon">' + e.icon + '</span>' +
+          '<div>' +
+            '<div>' + e.label + '</div>' +
+          '</div>' +
+        '</button>'
+      ).join('');
+
+      renderDots();
+    }
+
+    function answer(ecoId) {
+      if (locked) return;
+      locked = true;
+      const item = queue[current];
+      const btn = document.getElementById('ebtn-' + ecoId);
+      const fb = document.getElementById('feedbackBar');
+
+      if (ecoId === item.eco) {
+        btn.classList.add('correct');
+        fb.textContent = '✅ Correto! ' + ECOSYSTEMS.find(e => e.id === ecoId).label + '!';
+        fb.className = 'feedback-bar correct';
+        score += 10;
+        correct++;
+        results.push(true);
+      } else {
+        btn.classList.add('wrong');
+        const correctEco = ECOSYSTEMS.find(e => e.id === item.eco);
+        document.getElementById('ebtn-' + item.eco).classList.add('correct');
+        fb.textContent = '❌ Era ' + correctEco.label + '!';
+        fb.className = 'feedback-bar wrong';
+        wrong++;
+        results.push(false);
+      }
+
+      document.getElementById('eScore').textContent = score;
+      document.getElementById('eCorrect').textContent = correct;
+      renderDots();
+
+      setTimeout(() => {
+        current++;
+        locked = false;
+        if (current >= queue.length) {
+          showComplete();
+        } else {
+          showCard();
+        }
+      }, 1200);
+    }
+
+    function showComplete() {
+      document.getElementById('gameStage').style.display = 'none';
+      document.getElementById('finalCorrect').textContent = correct;
+      document.getElementById('finalWrong').textContent = wrong;
+      document.getElementById('finalScore').textContent = score;
+      document.getElementById('ecoComplete').classList.add('active');
+      VS.saveGameScore('ecossistemas', score);
+    }
+
+    VS.init().then(() => {
+      VS.requireAuth();
+      VS.renderHeader(null);
+      startGame();
+    });
+  </script>
+</body>
+</html>

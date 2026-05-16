@@ -190,28 +190,25 @@ const GAMES = [
     icon: '🦁',
     gradient: 'linear-gradient(135deg,#FFF9C4,#FFD54F)',
     difficulty: 'med',
-    url: '#',
-    comingSoon: true
+    url: 'jogo-memoria.html'
   },
   {
     id: 'plantio',
     title: 'Simulador de Plantio',
-    description: 'Aprenda a plantar e cuidar de uma horta virtual! Regue e colha.',
+    description: 'Plante sementes, regue e colha! Cuide do seu jardim virtual.',
     icon: '🌱',
     gradient: 'linear-gradient(135deg,#DCEDC8,#AED581)',
     difficulty: 'easy',
-    url: '#',
-    comingSoon: true
+    url: 'jogo-plantio.html'
   },
   {
     id: 'ecossistemas',
     title: 'Quebra-Cabeça Ambiental',
-    description: 'Monte os ecossistemas do Brasil: Amazônia, Cerrado, Mata Atlântica!',
+    description: 'Classifique animais e plantas nos ecossistemas certos do Brasil!',
     icon: '🧩',
     gradient: 'linear-gradient(135deg,#B3E5FC,#4FC3F7)',
     difficulty: 'hard',
-    url: '#',
-    comingSoon: true
+    url: 'jogo-ecossistemas.html'
   }
 ];
 
