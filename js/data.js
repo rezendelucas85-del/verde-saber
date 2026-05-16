@@ -171,6 +171,121 @@ const STORIES = [
       }
     ]
   }
+  ,
+  {
+    id: 'mar',
+    title: 'O Mistério do Mar',
+    description: 'Sofia, a tartaruga, e Pedro, o peixe, descobrem que o oceano está cheio de lixo. Podem salvá-lo?',
+    icon: '🐢',
+    gradient: 'linear-gradient(135deg,#B3E5FC,#0288D1)',
+    sceneBg: '#D0F0FA',
+    totalPages: 7,
+    pages: [
+      {
+        illustration: '🌊 🐢 🐠',
+        text: 'Sofia a tartaruga e Pedro o peixe viviam no Mar Azul, um oceano lindo e cheio de vida. Todos os dias nadavam entre corais coloridos e plantas marinhas.',
+        type: 'normal'
+      },
+      {
+        illustration: '🐢 😟 🛍️',
+        speech: 'Isso não é uma água-viva! É plástico!',
+        speaker: '🐢',
+        text: 'Mas um dia Sofia encontrou algo estranho flutuando na água. Uma sacola plástica! Ela ficou assustada.',
+        type: 'normal'
+      },
+      {
+        illustration: '🐠 🗑️ 💔',
+        speech: 'De onde vem todo esse lixo?',
+        speaker: '🐠',
+        text: 'Pedro também viu: garrafas, sacolas e lixo por todo o lado. Os corais estavam cobertos de plástico e os peixes estavam sumindo.',
+        type: 'normal'
+      },
+      {
+        illustration: '🏖️ 🗑️ 💨',
+        text: 'O lixo vinha das praias e dos rios. As pessoas jogavam no chão, o vento levava para o rio, e o rio levava para o mar. Tudo estava conectado!',
+        type: 'normal'
+      },
+      {
+        illustration: '🐢 💭 🐠',
+        text: 'Sofia e Pedro precisavam fazer algo urgente! O que você acha que eles devem fazer?',
+        type: 'choice',
+        choices: [
+          { text: '🤝 Nadar até a praia e pedir ajuda a uma criança', next: 5 },
+          { text: '📢 Alertar todos os animais do mar sobre o perigo', next: 5 }
+        ]
+      },
+      {
+        illustration: '👧 🌊 🧹',
+        speech: 'Vou organizar um mutirão de limpeza da praia!',
+        speaker: '👧',
+        text: 'A menina Ana estava na praia quando viu Sofia na areia. Ela entendeu o recado e chamou toda a escola para limpar a praia!',
+        type: 'normal'
+      },
+      {
+        illustration: '🌊 🐢 🐠',
+        speech: 'Obrigada, Ana! Cuide sempre do nosso mar!',
+        speaker: '🐢',
+        text: 'A praia ficou limpa, o mar voltou a ser azul e os corais renasceram. Sofia aprendeu: humanos e animais precisam cuidar do planeta juntos!',
+        type: 'normal'
+      }
+    ]
+  },
+  {
+    id: 'cidade',
+    title: 'O Herói do Bairro',
+    description: 'Léo quer transformar seu bairro cinzento num lugar mais verde e saudável. Será que consegue?',
+    icon: '🌱',
+    gradient: 'linear-gradient(135deg,#DCEDC8,#8BC34A)',
+    sceneBg: '#F1F8E9',
+    totalPages: 7,
+    pages: [
+      {
+        illustration: '🏙️ 👦 😟',
+        text: 'Léo morava numa cidade quente e cinzenta, com muito asfalto e pouca sombra. No verão, o calor era insuportável. Ele queria mudar isso!',
+        type: 'normal'
+      },
+      {
+        illustration: '👦 🌱 💡',
+        speech: 'Vou transformar o terraço da nossa casa!',
+        speaker: '👦',
+        text: 'Um dia Léo teve uma ideia: e se transformasse o terraço vazio num jardim? Com sementes, terra e sol, tudo era possível!',
+        type: 'normal'
+      },
+      {
+        illustration: '👦 🌻 💧',
+        text: 'Com paciência, Léo plantou tomates, alface e flores. Em poucas semanas as abelhas vieram, os pássaros apareceram e o calor diminuiu lá em casa!',
+        type: 'normal'
+      },
+      {
+        illustration: '👦 ♻️ 🏘️',
+        speech: 'Cada um faz um pouco e o mundo muda!',
+        speaker: '👦',
+        text: 'Léo também juntou os amigos do bairro para criar um ponto de coleta de lixo reciclável na esquina. A vizinhança adorou a ideia!',
+        type: 'normal'
+      },
+      {
+        illustration: '👦 🌳 ✨',
+        text: 'Agora Léo queria fazer ainda mais pelo bairro! O que você acha que ele deve fazer?',
+        type: 'choice',
+        choices: [
+          { text: '🌳 Plantar árvores nas calçadas com os vizinhos', next: 5 },
+          { text: '☀️ Convencer a escola a instalar painéis solares', next: 5 }
+        ]
+      },
+      {
+        illustration: '🌳 🏘️ 🌻',
+        text: 'Com árvores nas calçadas, o bairro ficou mais fresco e bonito. Outros moradores viram o exemplo de Léo e também começaram seus próprios jardins!',
+        type: 'normal'
+      },
+      {
+        illustration: '👦 🌱 🌍',
+        speech: 'Qualquer pessoa pode ser um herói verde!',
+        speaker: '👦',
+        text: 'Léo aprendeu que não precisa ser grande para fazer diferença. Pequenas atitudes — uma semente, um sorriso, uma ideia — podem mudar o mundo!',
+        type: 'normal'
+      }
+    ]
+  }
 ];
 
 const GAMES = [
@@ -265,14 +380,14 @@ const MEDALS = [
     icon: '🌍',
     title: 'Eco Herói',
     desc: 'Completou todas as histórias',
-    check: s => ['floresta','rio','abelha'].every(id => s.progress?.stories?.[id]?.completed)
+    check: s => ['floresta','rio','abelha','mar','cidade'].every(id => s.progress?.stories?.[id]?.completed)
   },
   {
     id: 'leitor_dedicado',
     icon: '🏆',
     title: 'Leitor Dedicado',
     desc: 'Todas as histórias com 3 estrelas',
-    check: s => ['floresta','rio','abelha'].every(id => (s.progress?.stories?.[id]?.stars || 0) >= 3)
+    check: s => ['floresta','rio','abelha','mar','cidade'].every(id => (s.progress?.stories?.[id]?.stars || 0) >= 3)
   },
   {
     id: 'guardiao_oceano',

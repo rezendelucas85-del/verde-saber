@@ -189,11 +189,11 @@ const VS = {
   },
   getStudentProgressData(student) {
     const s = student || this.getCurrentStudent();
-    if (!s) return { stories: 0, storiesTotal: 3, games: 0, gamesTotal: 1, tips: 0, tipsTotal: 1 };
+    if (!s) return { stories: 0, storiesTotal: 5, games: 0, gamesTotal: 4, tips: 0, tipsTotal: 1 };
     const stories = Object.values(s.progress?.stories || {}).filter(v => v.completed).length;
-    const games = (s.progress?.games?.reciclagem?.played || 0) > 0 ? 1 : 0;
+    const games = ['reciclagem','memoria','plantio','ecossistemas'].filter(id => (s.progress?.games?.[id]?.played || 0) > 0).length;
     const tips = s.progress?.tips?.visited ? 1 : 0;
-    return { stories, storiesTotal: 3, games, gamesTotal: 1, tips, tipsTotal: 1 };
+    return { stories, storiesTotal: 5, games, gamesTotal: 4, tips, tipsTotal: 1 };
   },
   trackTipsVisit() {
     const student = this.getCurrentStudent();
