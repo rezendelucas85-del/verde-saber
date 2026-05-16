@@ -151,8 +151,10 @@ const VS = {
   // ── Progresso do aluno ──
   completeStory(storyId, stars) {
     const student = this.getCurrentStudent();
-    if (!student) return 0;
-    const progress = student.progress || { stories: {}, games: {} };
+    if (!student) return;
+    const progress = student.progress || {};
+    if (!progress.stories) progress.stories = {};
+    if (!progress.games)   progress.games   = {};
     if (progress.stories[storyId]?.completed) return;
     progress.stories[storyId] = { completed: true, stars, completedAt: Date.now() };
     this.updateStudent(student.id, { progress });
@@ -160,7 +162,9 @@ const VS = {
   saveGameScore(gameId, score) {
     const student = this.getCurrentStudent();
     if (!student) return { isHighScore: false };
-    const progress = student.progress || { stories: {}, games: {} };
+    const progress = student.progress || {};
+    if (!progress.stories) progress.stories = {};
+    if (!progress.games)   progress.games   = {};
     const prev = progress.games[gameId] || { highScore: 0, played: 0 };
     const isHighScore = score > prev.highScore;
     progress.games[gameId] = {
@@ -198,8 +202,10 @@ const VS = {
   trackTipsVisit() {
     const student = this.getCurrentStudent();
     if (!student || student.progress?.tips?.visited) return;
-    const progress = { ...(student.progress || { stories: {}, games: {} }) };
-    if (!progress.tips) progress.tips = {};
+    const progress = student.progress || {};
+    if (!progress.stories) progress.stories = {};
+    if (!progress.games)   progress.games   = {};
+    if (!progress.tips)    progress.tips    = {};
     progress.tips.visited = true;
     progress.tips.visitedAt = Date.now();
     this.updateStudent(student.id, { progress });
