@@ -5,6 +5,7 @@ const STORIES = [
     description: 'Os animais da Floresta Esmeralda descobrem que sua casa está em perigo. Será que conseguirão salvá-la?',
     icon: '🌳',
     gradient: 'linear-gradient(135deg,#C8E6C9,#66BB6A)',
+    sceneBg: '#D7F0D8',
     totalPages: 8,
     pages: [
       {
@@ -13,22 +14,28 @@ const STORIES = [
         type: 'normal'
       },
       {
-        illustration: '😟 🐸 💨',
-        text: 'O ar tinha um cheiro estranho e a água do riacho estava escura. Muitas árvores estavam caindo. "O que está acontecendo com nossa floresta?" perguntou Pingo, muito preocupado.',
+        illustration: '🐸 😟 💨',
+        speech: 'O que está acontecendo com nossa floresta?',
+        speaker: '🐸',
+        text: 'O ar tinha um cheiro estranho e a água do riacho estava escura. Muitas árvores estavam caindo. Pingo ficou muito preocupado.',
         type: 'normal'
       },
       {
         illustration: '🐸 🦜 🐢',
-        text: 'Pingo chamou seus amigos: a papagaia Flora e a tartaruga Tarta. Juntos foram investigar o problema. "Precisamos descobrir o que está causando isso!", disse Flora com determinação.',
+        speech: 'Precisamos descobrir o que está causando isso!',
+        speaker: '🦜',
+        text: 'Pingo chamou seus amigos: a papagaia Flora e a tartaruga Tarta. Juntos foram investigar o problema.',
         type: 'normal'
       },
       {
-        illustration: '🏭 💨 🌊',
-        text: 'Encontraram uma fábrica que jogava lixo no rio e soltava fumaça no ar. Os animais ficaram muito tristes. "Precisamos fazer algo!", disse Tarta devagar, mas com muita coragem.',
+        illustration: '🏭 💨 🐢',
+        speech: 'Precisamos fazer algo!',
+        speaker: '🐢',
+        text: 'Encontraram uma fábrica que jogava lixo no rio e soltava fumaça no ar. Os animais ficaram muito tristes. Tarta estava assustada, mas cheia de coragem.',
         type: 'normal'
       },
       {
-        illustration: '🤔 ❓ 💭',
+        illustration: '🐸 🦜 🐢',
         text: 'Chegou a hora de decidir! O que os amigos devem fazer para salvar a floresta?',
         type: 'choice',
         choices: [
@@ -47,7 +54,9 @@ const STORIES = [
         type: 'normal'
       },
       {
-        illustration: '🎉 🌈 🐸 🦜 🐢',
+        illustration: '🐸 🦜 🐢',
+        speech: 'Juntos podemos proteger a natureza!',
+        speaker: '🐸',
         text: 'Em poucos meses a floresta voltou a ser linda! O ar ficou puro, o riacho ficou limpo e os animais voltaram a cantar felizes. Pingo aprendeu: juntos podemos proteger a natureza!',
         type: 'normal'
       }
@@ -59,6 +68,7 @@ const STORIES = [
     description: 'Zara, a lontra curiosa, descobre por que o Rio Cristal está ficando triste. Uma história sobre água limpa!',
     icon: '🦦',
     gradient: 'linear-gradient(135deg,#B3E5FC,#29B6F6)',
+    sceneBg: '#D6ECFF',
     totalPages: 7,
     pages: [
       {
@@ -67,22 +77,26 @@ const STORIES = [
         type: 'normal'
       },
       {
-        illustration: '😢 🌊 🐟',
-        text: 'Mas um dia a água ficou turva e com mau cheiro. Os peixes começaram a desaparecer. "Nosso rio está chorando!", disse Zara, muito preocupada.',
+        illustration: '🦦 😢 🐟',
+        speech: 'Nosso rio está chorando!',
+        speaker: '🦦',
+        text: 'Mas um dia a água ficou turva e com mau cheiro. Os peixes começaram a desaparecer. Zara ficou muito preocupada.',
         type: 'normal'
       },
       {
-        illustration: '🔍 🦦 🌊',
+        illustration: '🦦 🔍 🌊',
         text: 'Zara decidiu explorar o rio inteiro para descobrir o problema. Ela nadou muito, muito longe, até as margens da cidade...',
         type: 'normal'
       },
       {
-        illustration: '🗑️ 💧 😠',
-        text: 'Encontrou pessoas jogando lixo direto no rio! Garrafas, sacolas plásticas e produtos químicos. "Isso está machucando nosso rio!" pensou Zara com tristeza.',
+        illustration: '🦦 🗑️ 😠',
+        speech: 'Isso está machucando nosso rio!',
+        speaker: '🦦',
+        text: 'Encontrou pessoas jogando lixo direto no rio! Garrafas, sacolas plásticas e produtos químicos. Zara ficou com muita tristeza e raiva.',
         type: 'normal'
       },
       {
-        illustration: '🤔 💭 ✨',
+        illustration: '🦦 💭 ✨',
         text: 'Zara precisa da sua ajuda! O que ela deve fazer para salvar o Rio Cristal?',
         type: 'choice',
         choices: [
@@ -96,8 +110,10 @@ const STORIES = [
         type: 'normal'
       },
       {
-        illustration: '🌈 🐟 🦦 💧',
-        text: 'Depois da limpeza, o Rio Cristal voltou a brilhar! Os peixes voltaram, a água ficou limpa e Zara dançou feliz. Cuidar da água é cuidar da vida!',
+        illustration: '🦦 🌈 🐟',
+        speech: 'Cuidar da água é cuidar da vida!',
+        speaker: '🦦',
+        text: 'Depois da limpeza, o Rio Cristal voltou a brilhar! Os peixes voltaram, a água ficou limpa e Zara dançou feliz.',
         type: 'normal'
       }
     ]
@@ -108,6 +124,7 @@ const STORIES = [
     description: 'Bela, a abelha trabalhadora, ensina sobre a importância das flores e da polinização para o nosso mundo.',
     icon: '🐝',
     gradient: 'linear-gradient(135deg,#FFF9C4,#FFD54F)',
+    sceneBg: '#FFFCE6',
     totalPages: 6,
     pages: [
       {
@@ -116,23 +133,31 @@ const STORIES = [
         type: 'normal'
       },
       {
-        illustration: '🤔 🐝 👦',
-        text: 'Um dia Tiago, um menino curioso, perguntou: "Abelha, para que você fica voando de flor em flor?" Bela sorriu e disse que ia mostrar para ele!',
+        illustration: '👦 🐝 🌸',
+        speech: 'Abelha, para que você voa de flor em flor?',
+        speaker: '👦',
+        text: 'Um dia Tiago, um menino curioso, perguntou e Bela sorriu. Ela disse que ia mostrar para ele como funciona a magia das flores!',
         type: 'normal'
       },
       {
-        illustration: '🌺 ➡️ 🍎',
-        text: '"Quando eu visito as flores, levo um pózinho especial de uma para outra. Isso se chama polinização! Sem mim, as flores não viram frutas!"',
+        illustration: '🐝 🌺 🍎',
+        speech: 'Isso se chama polinização! Sem mim, as flores não viram frutas!',
+        speaker: '🐝',
+        text: 'Bela explicou: quando visita as flores, ela leva um pózinho dourado de uma para outra. É assim que as frutas nascem!',
         type: 'normal'
       },
       {
-        illustration: '🍎 🍊 🍇 🍓',
-        text: '"Mas Bela," disse Tiago, "você está dizendo que maçã, laranja e morango precisam de você?" Bela balançou a cabeça: "Sim! E de todas as minhas irmãs abelhas!"',
+        illustration: '👦 🐝 🍎',
+        speech: 'Maçã e morango precisam de você?',
+        speaker: '👦',
+        text: 'Tiago ficou surpreso! Bela balançou a cabeça: "Sim! E de todas as minhas irmãs abelhas! Sem nós, metade dos alimentos do mundo desapareceria."',
         type: 'normal'
       },
       {
-        illustration: '🌹 🌻 🌷 💛',
-        text: '"O que eu posso fazer para ajudar as abelhas?" perguntou Tiago. O que você acha que ele deve fazer?',
+        illustration: '👦 🌻 🌷',
+        speech: 'O que posso fazer para ajudar as abelhas?',
+        speaker: '👦',
+        text: 'Tiago queria ajudar muito! O que você acha que ele deve fazer?',
         type: 'choice',
         choices: [
           { text: '🌱 Plantar flores coloridas no jardim de casa', next: 5 },
@@ -140,7 +165,7 @@ const STORIES = [
         ]
       },
       {
-        illustration: '🏡 🌸 🐝 😊',
+        illustration: '🏡 🌸 🐝',
         text: 'Perfeito! Tiago plantou um jardim lindo cheio de flores coloridas. Logo Bela e suas irmãs vieram morar ali. A vida de Tiago ficou mais colorida e saborosa!',
         type: 'normal'
       }

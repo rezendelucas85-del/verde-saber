@@ -267,12 +267,51 @@ body{
 .story-page{display:none;padding:22px 20px;animation:fadeUp .4s ease;}
 .story-page.active{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-.story-illustration{
-  background:linear-gradient(135deg,#E8F5E9,#C8E6C9);
-  border-radius:var(--radius);min-height:180px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:5.5rem;margin-bottom:20px;
-  border:3px solid var(--green-200);letter-spacing:8px;
+/* ── Comic Panel ── */
+.comic-panel{
+  border-radius:var(--radius);
+  border:3px solid rgba(0,0,0,.10);
+  padding:22px 16px 26px;
+  margin-bottom:20px;
+  min-height:190px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,.07);
+}
+.comic-panel::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(0,0,0,.045) 1.5px,transparent 1.5px);
+  background-size:18px 18px;pointer-events:none;
+}
+.comic-chars-row{
+  display:flex;justify-content:center;
+  align-items:flex-end;gap:18px;width:100%;
+  flex-wrap:wrap;position:relative;z-index:1;
+}
+.comic-char-wrap{display:flex;flex-direction:column;align-items:center;}
+.comic-char-emoji{
+  font-size:3.8rem;line-height:1;
+  filter:drop-shadow(0 3px 7px rgba(0,0,0,.18));
+}
+.speech-bubble{
+  background:#fff;border:2.5px solid #222;
+  border-radius:14px;padding:8px 13px;
+  font-family:'Nunito',sans-serif;
+  font-size:.8rem;font-weight:800;color:#1a1a1a;
+  max-width:185px;text-align:center;
+  position:relative;margin-bottom:12px;line-height:1.45;
+  box-shadow:3px 3px 0 rgba(0,0,0,.1);
+}
+.speech-bubble::after{
+  content:'';position:absolute;
+  bottom:-16px;left:50%;transform:translateX(-50%);
+  border:8px solid transparent;border-top-color:#222;
+}
+.speech-bubble::before{
+  content:'';position:absolute;
+  bottom:-12px;left:50%;transform:translateX(-50%);
+  border:7px solid transparent;border-top-color:#fff;z-index:1;
 }
 .story-text-box{
   background:#fff;border-radius:var(--radius);padding:22px;
@@ -512,5 +551,6 @@ body{
   .login-logo h1{font-size:2.2rem;}
   .menu-grid{grid-template-columns:1fr 1fr;gap:10px;}
   .bins-grid{grid-template-columns:repeat(3,1fr);}
-  .story-illustration{font-size:4rem;min-height:130px;}
+  .comic-char-emoji{font-size:3rem;}
+  .comic-panel{min-height:150px;padding:16px 12px 20px;}
 }

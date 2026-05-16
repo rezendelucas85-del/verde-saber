@@ -45,10 +45,29 @@
     let story = null;
     let storyId = null;
 
+    function renderComicPanel(page) {
+      const emojis = page.illustration.split(' ').filter(Boolean);
+      const speakerIdx = page.speaker
+        ? emojis.indexOf(page.speaker)
+        : (page.speech ? 0 : -1);
+
+      const chars = emojis.map((e, i) => `
+        <div class="comic-char-wrap">
+          ${i === speakerIdx && page.speech
+            ? `<div class="speech-bubble">${page.speech}</div>`
+            : ''}
+          <span class="comic-char-emoji">${e}</span>
+        </div>`).join('');
+
+      return `<div class="comic-panel" style="background:${story.sceneBg || '#E8F5E9'}">
+        <div class="comic-chars-row">${chars}</div>
+      </div>`;
+    }
+
     function buildPages() {
       document.getElementById('storyPages').innerHTML = pages.map((page, i) => `
         <div id="page-${i}" class="story-page${i === 0 ? ' active' : ''}">
-          <div class="story-illustration">${page.illustration}</div>
+          ${renderComicPanel(page)}
           <div class="story-text-box"><p>${page.text}</p></div>
           ${page.type === 'choice' ? `
             <div class="story-choices">
