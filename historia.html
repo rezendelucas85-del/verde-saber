@@ -46,22 +46,22 @@
     let storyId = null;
 
     function renderComicPanel(page) {
-      const emojis = page.illustration.split(' ').filter(Boolean);
+      const emojis = page.illustration.split(' ').filter(e => e.trim());
       const speakerIdx = page.speaker
         ? emojis.indexOf(page.speaker)
         : (page.speech ? 0 : -1);
 
-      const chars = emojis.map((e, i) => `
-        <div class="comic-char-wrap">
-          ${i === speakerIdx && page.speech
-            ? `<div class="speech-bubble">${page.speech}</div>`
-            : ''}
-          <span class="comic-char-emoji">${e}</span>
-        </div>`).join('');
+      const chars = emojis.map((e, i) => {
+        const hasBubble = i === speakerIdx && page.speech;
+        return '<div class="comic-char-wrap">'
+          + (hasBubble ? '<div class="speech-bubble">' + page.speech + '</div>' : '')
+          + '<span class="comic-char-emoji">' + e + '</span>'
+          + '</div>';
+      }).join('');
 
-      return `<div class="comic-panel" style="background:${story.sceneBg || '#E8F5E9'}">
-        <div class="comic-chars-row">${chars}</div>
-      </div>`;
+      return '<div class="comic-panel" style="background:' + (story.sceneBg || '#E8F5E9') + '">'
+        + '<div class="comic-chars-row">' + chars + '</div>'
+        + '</div>';
     }
 
     function buildPages() {
