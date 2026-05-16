@@ -26,7 +26,6 @@
       <h2>Parabéns!</h2>
       <p id="completeMsg">Você concluiu a história!</p>
       <div class="stars-earned" id="starsEarned">⭐⭐⭐</div>
-      <div class="coins-earned" id="coinsEarned">🪙 +45 moedas ganhas!</div>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
         <a href="historias.html" class="btn btn-secondary">📚 Mais Histórias</a>
         <a href="home.html" class="btn btn-primary">🏠 Início</a>
@@ -108,11 +107,8 @@
       document.getElementById(`page-${currentPage}`)?.classList.remove('active');
       document.getElementById('storyComplete').classList.add('active');
       const stars = 3;
-      const reward = VS.completeStory(storyId, stars);
+      VS.completeStory(storyId, stars);
       document.getElementById('starsEarned').textContent = '⭐'.repeat(stars);
-      document.getElementById('coinsEarned').textContent = reward > 0
-        ? `🪙 +${reward} moedas ganhas!`
-        : '🪙 Você já havia concluído essa história!';
       document.getElementById('completeMsg').textContent = `Você concluiu "${story.title}"!`;
       document.getElementById('progressFill').style.width = '100%';
       window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -72,7 +72,6 @@
         <div style="font-size:2.5rem;font-weight:900;color:#1B5E20" id="finalScore">0</div>
         <div style="font-size:.9rem;color:#558B2F;font-weight:700">pontos finais</div>
       </div>
-      <div id="coinsResult" style="background:linear-gradient(135deg,#FFF9C4,#FFD54F);border-radius:16px;padding:12px;margin-bottom:22px;font-size:1.05rem;font-weight:800;color:#5D4037;"></div>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
         <button class="btn btn-secondary" onclick="restartGame()">🔄 Jogar Novamente</button>
         <a href="jogos.html" class="btn btn-primary">🎮 Outros Jogos</a>
@@ -198,10 +197,7 @@
       else if (score >= 50) feedback = '👍 Bom trabalho! Continue aprendendo!';
       else                  feedback = '📚 Que tal tentar novamente e aprender mais?';
       document.getElementById('completeFeedback').textContent = feedback;
-      const result = VS.saveGameScore('reciclagem', score);
-      document.getElementById('coinsResult').textContent = result.isHighScore
-        ? `🏆 Novo recorde! 🪙 +${result.coinReward} moedas!`
-        : `🪙 +${result.coinReward} moedas ganhas!`;
+      VS.saveGameScore('reciclagem', score);
     }
 
     function restartGame() {

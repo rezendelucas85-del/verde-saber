@@ -20,16 +20,8 @@
     <p class="home-subtitle">O que vamos aprender hoje?</p>
     <div class="home-stats">
       <div class="stat-item">
-        <span class="stat-value" id="statCoins">0</span>
-        <span class="stat-label">🪙 Moedas</span>
-      </div>
-      <div class="stat-item">
         <span class="stat-value" id="statStars">0</span>
         <span class="stat-label">⭐ Estrelas</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="statLevel">1</span>
-        <span class="stat-label">🏆 Nível</span>
       </div>
       <div class="stat-item">
         <span class="stat-value" id="statStories">0</span>
@@ -79,9 +71,7 @@
       VS.requireAuth();
       const s = VS.getCurrentStudent();
       document.getElementById('homeWelcome').textContent = `Olá, ${s.name}! 👋`;
-      document.getElementById('statCoins').textContent = s.coins || 0;
       document.getElementById('statStars').textContent = VS.getTotalStars();
-      document.getElementById('statLevel').textContent = s.level || 1;
       const completed = VS.getCompletedStories();
       document.getElementById('statStories').textContent = completed;
       document.getElementById('badgeStories').textContent = `${completed}/${STORIES.length}`;

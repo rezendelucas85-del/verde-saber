@@ -70,8 +70,6 @@ const VS = {
       school: school ? school.trim() : '',
       createdAt: Date.now(),
       lastActive: null,
-      level: 1,
-      coins: 0,
       progress: { stories: {}, games: {} }
     };
     this._students.push(student);
@@ -155,18 +153,13 @@ const VS = {
     const student = this.getCurrentStudent();
     if (!student) return 0;
     const progress = student.progress || { stories: {}, games: {} };
-    if (progress.stories[storyId]?.completed) return 0;
-    const reward = stars * 15;
+    if (progress.stories[storyId]?.completed) return;
     progress.stories[storyId] = { completed: true, stars, completedAt: Date.now() };
-    const newCoins = (student.coins || 0) + reward;
-    this.updateStudent(student.id, {
-      progress, coins: newCoins, level: Math.floor(newCoins / 100) + 1
-    });
-    return reward;
+    this.updateStudent(student.id, { progress });
   },
   saveGameScore(gameId, score) {
     const student = this.getCurrentStudent();
-    if (!student) return { coinReward: 0, isHighScore: false };
+    if (!student) return { isHighScore: false };
     const progress = student.progress || { stories: {}, games: {} };
     const prev = progress.games[gameId] || { highScore: 0, played: 0 };
     const isHighScore = score > prev.highScore;
@@ -176,12 +169,8 @@ const VS = {
       lastScore: score,
       lastPlayed: Date.now()
     };
-    const reward = isHighScore ? score * 2 : score;
-    const newCoins = (student.coins || 0) + reward;
-    this.updateStudent(student.id, {
-      progress, coins: newCoins, level: Math.floor(newCoins / 100) + 1
-    });
-    return { coinReward: reward, isHighScore };
+    this.updateStudent(student.id, { progress });
+    return { isHighScore };
   },
   getTotalStars() {
     const s = this.getCurrentStudent();
