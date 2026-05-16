@@ -66,37 +66,37 @@ const STORIES = [
     id: 'rio',
     title: 'O Rio que Chorava',
     description: 'Zara, a lontra curiosa, descobre por que o Rio Cristal está ficando triste. Uma história sobre água limpa!',
-    icon: '🦦',
+    icon: '👧',
     gradient: 'linear-gradient(135deg,#B3E5FC,#29B6F6)',
     sceneBg: '#D6ECFF',
     totalPages: 7,
     pages: [
       {
-        illustration: '🏞️ 🦦 💧',
+        illustration: '🏞️ 👧 💧',
         text: 'Zara era uma lontra muito curiosa que morava no Rio Cristal. Todos os dias ela nadava e brincava nas águas claras e frescas do rio.',
         type: 'normal'
       },
       {
-        illustration: '🦦 😢 🐟',
+        illustration: '👧 😢 🐟',
         speech: 'Nosso rio está chorando!',
-        speaker: '🦦',
+        speaker: '👧',
         text: 'Mas um dia a água ficou turva e com mau cheiro. Os peixes começaram a desaparecer. Zara ficou muito preocupada.',
         type: 'normal'
       },
       {
-        illustration: '🦦 🔍 🌊',
+        illustration: '👧 🔍 🌊',
         text: 'Zara decidiu explorar o rio inteiro para descobrir o problema. Ela nadou muito, muito longe, até as margens da cidade...',
         type: 'normal'
       },
       {
-        illustration: '🦦 🗑️ 😠',
+        illustration: '👧 🗑️ 😠',
         speech: 'Isso está machucando nosso rio!',
-        speaker: '🦦',
+        speaker: '👧',
         text: 'Encontrou pessoas jogando lixo direto no rio! Garrafas, sacolas plásticas e produtos químicos. Zara ficou com muita tristeza e raiva.',
         type: 'normal'
       },
       {
-        illustration: '🦦 💭 ✨',
+        illustration: '👧 💭 ✨',
         text: 'Zara precisa da sua ajuda! O que ela deve fazer para salvar o Rio Cristal?',
         type: 'choice',
         choices: [
@@ -110,9 +110,9 @@ const STORIES = [
         type: 'normal'
       },
       {
-        illustration: '🦦 🌈 🐟',
+        illustration: '👧 🌈 🐟',
         speech: 'Cuidar da água é cuidar da vida!',
-        speaker: '🦦',
+        speaker: '👧',
         text: 'Depois da limpeza, o Rio Cristal voltou a brilhar! Os peixes voltaram, a água ficou limpa e Zara dançou feliz.',
         type: 'normal'
       }
