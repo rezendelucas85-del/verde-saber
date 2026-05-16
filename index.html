@@ -14,28 +14,28 @@
       background:rgba(0,28,10,.42);
       z-index:0;
     }
-    .login-bg-deco{display:none;}
 
-    /* Card base — sem fundo, flutua sobre a foto */
+    /* Card base */
     .eco-card{
       background:transparent;border-radius:0;padding:36px 32px;
       width:100%;max-width:460px;
       text-align:center;position:relative;z-index:1;
     }
+    .eco-card-col{display:flex;flex-direction:column;align-items:center;}
 
     /* Logo */
     .eco-logo-circle{
-      width:110px;height:110px;
+      width:120px;height:120px;
       display:flex;align-items:center;justify-content:center;
-      margin:0 auto 14px;
+      margin:0 auto 10px;
     }
     .eco-logo-circle img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.4));}
     .eco-title{font-size:2rem;font-weight:900;color:#fff;margin-bottom:6px;text-shadow:0 2px 10px rgba(0,0,0,.4);}
-    .eco-subtitle{font-size:.95rem;color:rgba(255,255,255,.9);font-weight:600;margin-bottom:28px;}
-    .eco-question{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:20px;text-shadow:0 1px 6px rgba(0,0,0,.3);}
+    .eco-subtitle{font-size:.95rem;color:rgba(255,255,255,.9);font-weight:600;margin-bottom:22px;}
+    .eco-question{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:16px;text-shadow:0 1px 6px rgba(0,0,0,.3);}
 
     /* Role cards */
-    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;}
     .role-card{
       background:#fff;border:2px solid var(--green-200);border-radius:18px;
       padding:22px 12px;cursor:pointer;transition:all .2s;
@@ -49,10 +49,15 @@
     .role-card strong{font-size:1rem;font-weight:800;color:var(--text-dark);}
     .role-card small{font-size:.78rem;font-weight:600;color:var(--text-light);}
 
-    /* Student selection view */
-    .eco-card-col{
-      display:flex;flex-direction:column;align-items:center;
+    /* Professor link */
+    .prof-link{
+      display:inline-block;margin-top:22px;
+      font-size:.78rem;color:rgba(255,255,255,.5);
+      font-weight:600;text-decoration:none;transition:color .2s;
     }
+    .prof-link:hover{color:rgba(255,255,255,.85);}
+
+    /* Back pill */
     .back-pill{
       align-self:flex-start;
       background:rgba(255,255,255,.2);border:none;border-radius:20px;
@@ -61,6 +66,8 @@
       cursor:pointer;transition:all .2s;margin-bottom:20px;
     }
     .back-pill:hover{background:rgba(255,255,255,.35);}
+
+    /* Small logo */
     .eco-logo-sm{
       width:52px;height:52px;background:var(--primary-dark);border-radius:50%;
       display:flex;align-items:center;justify-content:center;
@@ -70,26 +77,39 @@
     .eco-title-sm{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.35);}
     .eco-subtitle-sm{font-size:.9rem;color:rgba(255,255,255,.88);font-weight:600;margin-bottom:18px;}
 
-    /* Avatar grid */
-    .avatars-grid{
-      display:grid;grid-template-columns:repeat(3,1fr);
-      gap:12px;width:100%;
-    }
+    /* Avatar grid (login) */
+    .avatars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;}
     .avatar-btn{
-      background:var(--green-50);border:2px solid var(--green-200);
-      border-radius:16px;padding:16px 8px;
+      background:rgba(255,255,255,.9);border:2px solid var(--green-200);
+      border-radius:16px;padding:14px 8px;
       cursor:pointer;transition:all .2s;
       display:flex;flex-direction:column;align-items:center;gap:6px;
       font-family:'Nunito',sans-serif;
     }
-    .avatar-btn:hover{background:var(--green-100);border-color:var(--primary);transform:translateY(-3px);}
+    .avatar-btn:hover{background:#fff;border-color:var(--primary);transform:translateY(-3px);}
     .avatar-btn:active{transform:scale(.95);}
-    .avatar-btn-emoji{font-size:2.8rem;}
-    .avatar-btn-name{font-size:.8rem;font-weight:700;color:var(--text-dark);}
+    .avatar-btn-emoji{font-size:2.4rem;}
+    .avatar-btn-name{font-size:.78rem;font-weight:700;color:var(--text-dark);}
     .no-students-msg{
-      grid-column:1/-1;padding:24px 0;
-      color:rgba(255,255,255,.88);font-size:.9rem;font-weight:600;line-height:1.6;
+      grid-column:1/-1;padding:20px 0;
+      color:rgba(255,255,255,.88);font-size:.9rem;font-weight:600;line-height:1.7;
     }
+
+    /* Register avatar grid */
+    .reg-avatar-grid{
+      display:grid;grid-template-columns:repeat(5,1fr);
+      gap:8px;margin:0 0 16px;width:100%;
+    }
+    .reg-avatar-btn{
+      aspect-ratio:1;font-size:1.7rem;
+      background:rgba(255,255,255,.85);border:3px solid transparent;
+      border-radius:12px;cursor:pointer;transition:all .2s;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .reg-avatar-btn:hover{background:rgba(255,255,255,.95);}
+    .reg-avatar-btn.selected{border-color:var(--primary-dark);background:#fff;transform:scale(1.12);}
+
+    /* Form labels */
     .eco-card .form-group label{color:rgba(255,255,255,.9);}
     .eco-card #classroomError{color:#FFB3B3;}
 
@@ -97,45 +117,44 @@
     .sel-emoji{font-size:5rem;margin:10px 0 6px;display:block;}
     .sel-name{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.35);}
     .sel-hint{font-size:.9rem;color:rgba(255,255,255,.88);font-weight:600;margin-bottom:20px;}
-    .pwd-error{color:#FFB3B3;font-size:.85rem;font-weight:700;margin:-8px 0 10px;}
+    .pwd-error{color:#FFB3B3;font-size:.85rem;font-weight:700;margin:-6px 0 10px;}
+
+    /* Enter/register button */
     .btn-enter-app{
       width:100%;padding:15px;margin-top:6px;
-      background:var(--green-50);border:2px solid var(--green-200);
-      border-radius:50px;font-family:'Nunito',sans-serif;
-      font-size:1rem;font-weight:800;color:var(--text-dark);
+      background:linear-gradient(135deg,#66BB6A,#43A047);
+      border:none;border-radius:50px;font-family:'Nunito',sans-serif;
+      font-size:1rem;font-weight:800;color:#fff;
       cursor:pointer;transition:all .2s;
+      box-shadow:0 4px 14px rgba(76,175,80,.5);
     }
-    .btn-enter-app:hover{background:var(--green-100);border-color:var(--primary);}
+    .btn-enter-app:hover{box-shadow:0 6px 20px rgba(76,175,80,.7);}
     .btn-enter-app:active{transform:scale(.97);}
 
     .v-hidden{display:none!important;}
   </style>
 </head>
 <body class="login-page">
-  <div class="login-bg-deco">
-    <span class="leaf">🌿</span><span class="leaf">🍃</span>
-    <span class="leaf">🍀</span><span class="leaf">🌱</span>
-    <span class="leaf">🌾</span><span class="leaf">🌵</span>
-  </div>
 
-  <!-- View: Seleção de perfil -->
+  <!-- View: Landing -->
   <div id="viewLanding" class="eco-card">
     <div class="eco-logo-circle"><img src="img/mascote.png" alt="Verde Saber mascote"></div>
     <h1 class="eco-title">Verde Saber</h1>
     <p class="eco-subtitle">Aprendendo a cuidar do planeta</p>
-    <h2 class="eco-question">Quem está acessando?</h2>
+    <h2 class="eco-question">O que você quer fazer?</h2>
     <div class="role-grid">
-      <button class="role-card highlighted" onclick="goTeacher()">
-        <span class="role-icon">👩‍🏫</span>
-        <strong>Professor</strong>
-        <small>Gerenciar turma</small>
-      </button>
-      <button class="role-card" onclick="goStudent()">
+      <button class="role-card" onclick="goLogin()">
         <span class="role-icon">😊</span>
-        <strong>Sou aluno</strong>
-        <small>Fazer atividades</small>
+        <strong>Entrar</strong>
+        <small>Já tenho conta</small>
+      </button>
+      <button class="role-card highlighted" onclick="goRegister()">
+        <span class="role-icon">✨</span>
+        <strong>Cadastrar</strong>
+        <small>Sou novo aqui!</small>
       </button>
     </div>
+    <a href="professor.html" class="prof-link">Área do Professor →</a>
   </div>
 
   <!-- View: Número da sala -->
@@ -154,13 +173,33 @@
     <button class="btn-enter-app" onclick="submitClassroom()">Continuar →</button>
   </div>
 
-  <!-- View: Escolha de aluno -->
+  <!-- View: Escolha de aluno (login) -->
   <div id="viewStudents" class="eco-card eco-card-col v-hidden">
-    <button class="back-pill" onclick="backFromStudents()">← Voltar</button>
+    <button class="back-pill" onclick="backFrom('students')">← Voltar</button>
     <div class="eco-logo-sm">🌍</div>
-    <h1 class="eco-title-sm">Verde Saber</h1>
-    <p class="eco-subtitle-sm">Quem está jogando hoje?</p>
+    <h1 class="eco-title-sm">Quem está jogando?</h1>
+    <p class="eco-subtitle-sm">Toque no seu avatar</p>
     <div id="avatarsGrid" class="avatars-grid"></div>
+  </div>
+
+  <!-- View: Cadastro -->
+  <div id="viewRegister" class="eco-card eco-card-col v-hidden">
+    <button class="back-pill" onclick="backFrom('register')">← Voltar</button>
+    <div class="eco-logo-sm">✨</div>
+    <h1 class="eco-title-sm">Criar minha conta</h1>
+    <p class="eco-subtitle-sm">Escolha seu avatar favorito!</p>
+    <div id="regAvatarGrid" class="reg-avatar-grid"></div>
+    <div class="form-group" style="width:100%;text-align:left">
+      <label for="regName">Seu nome</label>
+      <input type="text" id="regName" placeholder="Como te chamam?" maxlength="20" autocomplete="off">
+    </div>
+    <div class="form-group" style="width:100%;text-align:left">
+      <label for="regPwd">Senha secreta</label>
+      <input type="password" id="regPwd" placeholder="Ex: 1234" autocomplete="off"
+             onkeydown="if(event.key==='Enter')doRegister()">
+    </div>
+    <p id="regError" class="pwd-error v-hidden">Digite seu nome!</p>
+    <button class="btn-enter-app" onclick="doRegister()">Criar conta! 🎉</button>
   </div>
 
   <!-- View: Senha do aluno -->
@@ -183,18 +222,18 @@
   <script src="js/firebase-config.js"></script>
   <script src="js/app.js"></script>
   <script>
+    const AVATARS = ['🐸','🦋','🌻','🦊','🐬','🐢','🐹','🐧','🐝','🦜'];
     let currentStudentId = null;
+    let selectedRegAvatar = AVATARS[0];
+    let afterClassroom = 'students';
 
     function showView(name) {
       document.querySelectorAll('[id^="view"]').forEach(el => el.classList.add('v-hidden'));
       document.getElementById('view' + name[0].toUpperCase() + name.slice(1)).classList.remove('v-hidden');
     }
 
-    function goTeacher() {
-      window.location.href = 'professor.html';
-    }
-
-    function goStudent() {
+    function checkClassroom(goTo) {
+      afterClassroom = goTo;
       const teacher = VS.getTeacher();
       if (teacher && teacher.classroom) {
         document.getElementById('classroomInput').value = '';
@@ -202,10 +241,12 @@
         showView('classroom');
         setTimeout(() => document.getElementById('classroomInput').focus(), 300);
       } else {
-        renderAvatars();
-        showView('students');
+        goTo === 'register' ? openRegister() : openStudents();
       }
     }
+
+    function goLogin()    { checkClassroom('students'); }
+    function goRegister() { checkClassroom('register'); }
 
     function submitClassroom() {
       const teacher = VS.getTeacher();
@@ -217,13 +258,53 @@
         document.getElementById('classroomError').classList.remove('v-hidden');
         return;
       }
+      afterClassroom === 'register' ? openRegister() : openStudents();
+    }
+
+    function backFrom(view) {
+      const teacher = VS.getTeacher();
+      showView(teacher && teacher.classroom ? 'classroom' : 'landing');
+    }
+
+    function openStudents() {
       renderAvatars();
       showView('students');
     }
 
-    function backFromStudents() {
-      const teacher = VS.getTeacher();
-      showView(teacher && teacher.classroom ? 'classroom' : 'landing');
+    function openRegister() {
+      selectedRegAvatar = AVATARS[0];
+      document.getElementById('regAvatarGrid').innerHTML = AVATARS.map(a =>
+        `<button class="reg-avatar-btn${a === selectedRegAvatar ? ' selected' : ''}"
+                 onclick="pickRegAvatar('${a}')">${a}</button>`
+      ).join('');
+      document.getElementById('regName').value = '';
+      document.getElementById('regPwd').value = '';
+      document.getElementById('regError').classList.add('v-hidden');
+      showView('register');
+      setTimeout(() => document.getElementById('regName').focus(), 300);
+    }
+
+    function pickRegAvatar(a) {
+      selectedRegAvatar = a;
+      document.querySelectorAll('.reg-avatar-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent === a);
+      });
+    }
+
+    function doRegister() {
+      const name  = document.getElementById('regName').value.trim();
+      const pwd   = document.getElementById('regPwd').value.trim();
+      const errEl = document.getElementById('regError');
+      if (!name) {
+        errEl.textContent = 'Digite seu nome!';
+        errEl.classList.remove('v-hidden');
+        document.getElementById('regName').focus();
+        return;
+      }
+      errEl.classList.add('v-hidden');
+      const student = VS.createStudent(name, selectedRegAvatar, pwd);
+      VS.setCurrentStudent(student.id);
+      window.location.href = 'home.html';
     }
 
     function renderAvatars() {
@@ -231,7 +312,7 @@
       const grid = document.getElementById('avatarsGrid');
       if (students.length === 0) {
         grid.innerHTML = `<p class="no-students-msg">
-          Nenhum aluno cadastrado ainda.<br>Peça ao professor para criar seu perfil.
+          Nenhum aluno ainda.<br>Volte e clique em <strong>Cadastrar</strong>!
         </p>`;
         return;
       }
