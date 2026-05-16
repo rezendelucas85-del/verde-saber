@@ -65,7 +65,7 @@ const STORIES = [
   {
     id: 'rio',
     title: 'O Rio que Chorava',
-    description: 'Zara, a lontra curiosa, descobre por que o Rio Cristal está ficando triste. Uma história sobre água limpa!',
+    description: 'Zara, a menina curiosa, descobre por que o Rio Cristal está ficando triste. Uma história sobre água limpa!',
     icon: '👧',
     gradient: 'linear-gradient(135deg,#B3E5FC,#29B6F6)',
     sceneBg: '#D6ECFF',
@@ -73,7 +73,7 @@ const STORIES = [
     pages: [
       {
         illustration: '🏞️ 👧 💧',
-        text: 'Zara era uma lontra muito curiosa que morava no Rio Cristal. Todos os dias ela nadava e brincava nas águas claras e frescas do rio.',
+        text: 'Zara era uma menina muito curiosa que morava perto do Rio Cristal. Todos os dias ela brincava e nadava nas águas claras e frescas do rio.',
         type: 'normal'
       },
       {
