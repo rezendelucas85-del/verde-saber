@@ -6,132 +6,92 @@
   <title>Verde Saber</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body.login-page{
-      background:url('img/floresta.jpg') center/cover no-repeat fixed;
+    body.login-page {
+      background: url('img/floresta.jpg') center/cover no-repeat fixed;
     }
-    body.login-page::before{
-      content:'';position:fixed;inset:0;
-      background:rgba(0,28,10,.42);
+    body.login-page::before {
+      content:''; position:fixed; inset:0;
+      background: rgba(0,28,10,.42);
       z-index:0;
     }
 
-    /* Card base */
-    .eco-card{
-      background:transparent;border-radius:0;padding:36px 32px;
-      width:100%;max-width:460px;
-      text-align:center;position:relative;z-index:1;
+    .eco-card {
+      background: transparent; border-radius:0; padding:36px 32px;
+      width:100%; max-width:460px;
+      text-align:center; position:relative; z-index:1;
     }
-    .eco-card-col{display:flex;flex-direction:column;align-items:center;}
+    .eco-card-col { display:flex; flex-direction:column; align-items:center; }
 
-    /* Logo */
-    .eco-logo-circle{
-      width:120px;height:120px;
-      display:flex;align-items:center;justify-content:center;
+    .eco-logo-circle {
+      width:120px; height:120px;
+      display:flex; align-items:center; justify-content:center;
       margin:0 auto 10px;
     }
-    .eco-logo-circle img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(0,0,0,.4));}
-    .eco-title{font-size:2rem;font-weight:900;color:#fff;margin-bottom:6px;text-shadow:0 2px 10px rgba(0,0,0,.4);}
-    .eco-subtitle{font-size:.95rem;color:rgba(255,255,255,.9);font-weight:600;margin-bottom:22px;}
-    .eco-question{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:16px;text-shadow:0 1px 6px rgba(0,0,0,.3);}
+    .eco-logo-circle img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 4px 16px rgba(0,0,0,.4)); }
+    .eco-title { font-size:2rem; font-weight:900; color:#fff; margin-bottom:6px; text-shadow:0 2px 10px rgba(0,0,0,.4); }
+    .eco-subtitle { font-size:.95rem; color:rgba(255,255,255,.9); font-weight:600; margin-bottom:22px; }
+    .eco-question { font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:16px; text-shadow:0 1px 6px rgba(0,0,0,.3); }
 
-    /* Role cards */
-    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;}
-    .role-card{
-      background:#fff;border:2px solid var(--green-200);border-radius:18px;
-      padding:22px 12px;cursor:pointer;transition:all .2s;
-      display:flex;flex-direction:column;align-items:center;gap:8px;
+    .role-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; width:100%; }
+    .role-card {
+      background:#fff; border:2px solid var(--green-200); border-radius:18px;
+      padding:22px 12px; cursor:pointer; transition:all .2s;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
       font-family:'Nunito',sans-serif;
     }
-    .role-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 6px 18px var(--shadow);}
-    .role-card:active{transform:scale(.96);}
-    .role-card.highlighted{background:var(--green-100);border-color:var(--primary);}
-    .role-icon{font-size:2.8rem;}
-    .role-card strong{font-size:1rem;font-weight:800;color:var(--text-dark);}
-    .role-card small{font-size:.78rem;font-weight:600;color:var(--text-light);}
+    .role-card:hover { transform:translateY(-4px); border-color:var(--primary); box-shadow:0 6px 18px var(--shadow); }
+    .role-card:active { transform:scale(.96); }
+    .role-card.highlighted { background:var(--green-100); border-color:var(--primary); }
+    .role-icon { font-size:2.8rem; }
+    .role-card strong { font-size:1rem; font-weight:800; color:var(--text-dark); }
+    .role-card small { font-size:.78rem; font-weight:600; color:var(--text-light); }
 
-    /* Professor link */
-    .prof-link{
-      display:inline-block;margin-top:22px;
-      font-size:.78rem;color:rgba(255,255,255,.5);
-      font-weight:600;text-decoration:none;transition:color .2s;
-    }
-    .prof-link:hover{color:rgba(255,255,255,.85);}
-
-    /* Back pill */
-    .back-pill{
+    .back-pill {
       align-self:flex-start;
-      background:rgba(255,255,255,.2);border:none;border-radius:20px;
-      padding:8px 16px;font-family:'Nunito',sans-serif;
-      font-size:.88rem;font-weight:700;color:#fff;
-      cursor:pointer;transition:all .2s;margin-bottom:20px;
+      background:rgba(255,255,255,.2); border:none; border-radius:20px;
+      padding:8px 16px; font-family:'Nunito',sans-serif;
+      font-size:.88rem; font-weight:700; color:#fff;
+      cursor:pointer; transition:all .2s; margin-bottom:20px;
     }
-    .back-pill:hover{background:rgba(255,255,255,.35);}
+    .back-pill:hover { background:rgba(255,255,255,.35); }
 
-    /* Small logo */
-    .eco-logo-sm{
-      width:52px;height:52px;background:var(--primary-dark);border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:1.8rem;margin-bottom:10px;
+    .eco-logo-sm {
+      width:52px; height:52px; background:var(--primary-dark); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.8rem; margin-bottom:10px;
       box-shadow:0 4px 12px rgba(76,175,80,.35);
     }
-    .eco-title-sm{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.35);}
-    .eco-subtitle-sm{font-size:.9rem;color:rgba(255,255,255,.88);font-weight:600;margin-bottom:18px;}
+    .eco-title-sm { font-size:1.5rem; font-weight:900; color:#fff; margin-bottom:4px; text-shadow:0 2px 8px rgba(0,0,0,.35); }
+    .eco-subtitle-sm { font-size:.9rem; color:rgba(255,255,255,.88); font-weight:600; margin-bottom:18px; }
 
-    /* Avatar grid (login) */
-    .avatars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;}
-    .avatar-btn{
-      background:rgba(255,255,255,.9);border:2px solid var(--green-200);
-      border-radius:16px;padding:14px 8px;
-      cursor:pointer;transition:all .2s;
-      display:flex;flex-direction:column;align-items:center;gap:6px;
-      font-family:'Nunito',sans-serif;
+    .reg-avatar-grid {
+      display:grid; grid-template-columns:repeat(5,1fr);
+      gap:8px; margin:0 0 16px; width:100%;
     }
-    .avatar-btn:hover{background:#fff;border-color:var(--primary);transform:translateY(-3px);}
-    .avatar-btn:active{transform:scale(.95);}
-    .avatar-btn-emoji{font-size:2.4rem;}
-    .avatar-btn-name{font-size:.78rem;font-weight:700;color:var(--text-dark);}
-    .no-students-msg{
-      grid-column:1/-1;padding:20px 0;
-      color:rgba(255,255,255,.88);font-size:.9rem;font-weight:600;line-height:1.7;
+    .reg-avatar-btn {
+      aspect-ratio:1; font-size:1.7rem;
+      background:rgba(255,255,255,.85); border:3px solid transparent;
+      border-radius:12px; cursor:pointer; transition:all .2s;
+      display:flex; align-items:center; justify-content:center;
     }
+    .reg-avatar-btn:hover { background:rgba(255,255,255,.95); }
+    .reg-avatar-btn.selected { border-color:var(--primary-dark); background:#fff; transform:scale(1.12); }
 
-    /* Register avatar grid */
-    .reg-avatar-grid{
-      display:grid;grid-template-columns:repeat(5,1fr);
-      gap:8px;margin:0 0 16px;width:100%;
-    }
-    .reg-avatar-btn{
-      aspect-ratio:1;font-size:1.7rem;
-      background:rgba(255,255,255,.85);border:3px solid transparent;
-      border-radius:12px;cursor:pointer;transition:all .2s;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .reg-avatar-btn:hover{background:rgba(255,255,255,.95);}
-    .reg-avatar-btn.selected{border-color:var(--primary-dark);background:#fff;transform:scale(1.12);}
+    .eco-card .form-group label { color:rgba(255,255,255,.9); }
+    .form-error { color:#FFB3B3; font-size:.85rem; font-weight:700; margin:-6px 0 10px; }
 
-    /* Form labels */
-    .eco-card .form-group label{color:rgba(255,255,255,.9);}
-    .eco-card #classroomError{color:#FFB3B3;}
-
-    /* Password view */
-    .sel-emoji{font-size:5rem;margin:10px 0 6px;display:block;}
-    .sel-name{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.35);}
-    .sel-hint{font-size:.9rem;color:rgba(255,255,255,.88);font-weight:600;margin-bottom:20px;}
-    .pwd-error{color:#FFB3B3;font-size:.85rem;font-weight:700;margin:-6px 0 10px;}
-
-    /* Enter/register button */
-    .btn-enter-app{
-      width:100%;padding:15px;margin-top:6px;
+    .btn-enter-app {
+      width:100%; padding:15px; margin-top:6px;
       background:linear-gradient(135deg,#66BB6A,#43A047);
-      border:none;border-radius:50px;font-family:'Nunito',sans-serif;
-      font-size:1rem;font-weight:800;color:#fff;
-      cursor:pointer;transition:all .2s;
+      border:none; border-radius:50px; font-family:'Nunito',sans-serif;
+      font-size:1rem; font-weight:800; color:#fff;
+      cursor:pointer; transition:all .2s;
       box-shadow:0 4px 14px rgba(76,175,80,.5);
     }
-    .btn-enter-app:hover{box-shadow:0 6px 20px rgba(76,175,80,.7);}
-    .btn-enter-app:active{transform:scale(.97);}
+    .btn-enter-app:hover { box-shadow:0 6px 20px rgba(76,175,80,.7); }
+    .btn-enter-app:active { transform:scale(.97); }
 
-    .v-hidden{display:none!important;}
+    .v-hidden { display:none!important; }
   </style>
 </head>
 <body class="login-page">
@@ -143,78 +103,63 @@
     <p class="eco-subtitle">Aprendendo a cuidar do planeta</p>
     <h2 class="eco-question">O que você quer fazer?</h2>
     <div class="role-grid">
-      <button class="role-card" onclick="goLogin()">
+      <button class="role-card" onclick="openLogin()">
         <span class="role-icon">😊</span>
         <strong>Entrar</strong>
         <small>Já tenho conta</small>
       </button>
-      <button class="role-card highlighted" onclick="goRegister()">
+      <button class="role-card highlighted" onclick="openRegister()">
         <span class="role-icon">✨</span>
-        <strong>Cadastrar</strong>
+        <strong>Criar conta</strong>
         <small>Sou novo aqui!</small>
       </button>
     </div>
-    <a href="professor.html" class="prof-link">Área do Professor →</a>
   </div>
 
-  <!-- View: Número da sala -->
-  <div id="viewClassroom" class="eco-card eco-card-col v-hidden">
+  <!-- View: Login -->
+  <div id="viewLogin" class="eco-card eco-card-col v-hidden">
     <button class="back-pill" onclick="showView('landing')">← Voltar</button>
-    <div class="eco-logo-sm">🏫</div>
-    <h1 class="eco-title-sm">Qual é sua sala?</h1>
-    <p class="eco-subtitle-sm">Digite o número da sala de aula</p>
+    <div class="eco-logo-sm">😊</div>
+    <h1 class="eco-title-sm">Bem-vindo de volta!</h1>
+    <p class="eco-subtitle-sm">Entre com seu nome e senha</p>
     <div class="form-group" style="width:100%;text-align:left">
-      <label for="classroomInput">Número da sala</label>
-      <input type="text" id="classroomInput" placeholder="Ex: 301"
-             style="font-size:1.3rem;text-align:center;font-weight:800;letter-spacing:3px"
-             autocomplete="off" onkeydown="if(event.key==='Enter')submitClassroom()">
+      <label for="loginName">Nome do aluno</label>
+      <input type="text" id="loginName" placeholder="Seu nome" maxlength="30"
+             autocomplete="off" onkeydown="if(event.key==='Enter')document.getElementById('loginPwd').focus()">
     </div>
-    <p id="classroomError" class="pwd-error v-hidden">Número incorreto! Tente de novo.</p>
-    <button class="btn-enter-app" onclick="submitClassroom()">Continuar →</button>
-  </div>
-
-  <!-- View: Escolha de aluno (login) -->
-  <div id="viewStudents" class="eco-card eco-card-col v-hidden">
-    <button class="back-pill" onclick="backFrom('students')">← Voltar</button>
-    <div class="eco-logo-sm">🌍</div>
-    <h1 class="eco-title-sm">Quem está jogando?</h1>
-    <p class="eco-subtitle-sm">Toque no seu avatar</p>
-    <div id="avatarsGrid" class="avatars-grid"></div>
+    <div class="form-group" style="width:100%;text-align:left">
+      <label for="loginPwd">Senha</label>
+      <input type="password" id="loginPwd" placeholder="••••"
+             autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <p id="loginError" class="form-error v-hidden">Nome ou senha incorretos!</p>
+    <button class="btn-enter-app" onclick="doLogin()">Entrar!</button>
   </div>
 
   <!-- View: Cadastro -->
   <div id="viewRegister" class="eco-card eco-card-col v-hidden">
-    <button class="back-pill" onclick="backFrom('register')">← Voltar</button>
+    <button class="back-pill" onclick="showView('landing')">← Voltar</button>
     <div class="eco-logo-sm">✨</div>
     <h1 class="eco-title-sm">Criar minha conta</h1>
     <p class="eco-subtitle-sm">Escolha seu avatar favorito!</p>
     <div id="regAvatarGrid" class="reg-avatar-grid"></div>
     <div class="form-group" style="width:100%;text-align:left">
+      <label for="regSchool">Nome da escola</label>
+      <input type="text" id="regSchool" placeholder="Ex: Escola Estadual..." maxlength="50"
+             autocomplete="off" onkeydown="if(event.key==='Enter')document.getElementById('regName').focus()">
+    </div>
+    <div class="form-group" style="width:100%;text-align:left">
       <label for="regName">Seu nome</label>
-      <input type="text" id="regName" placeholder="Como te chamam?" maxlength="20" autocomplete="off">
+      <input type="text" id="regName" placeholder="Como te chamam?" maxlength="30"
+             autocomplete="off" onkeydown="if(event.key==='Enter')document.getElementById('regPwd').focus()">
     </div>
     <div class="form-group" style="width:100%;text-align:left">
       <label for="regPwd">Senha secreta</label>
-      <input type="password" id="regPwd" placeholder="Ex: 1234" autocomplete="off"
-             onkeydown="if(event.key==='Enter')doRegister()">
+      <input type="password" id="regPwd" placeholder="Ex: 1234"
+             autocomplete="off" onkeydown="if(event.key==='Enter')doRegister()">
     </div>
-    <p id="regError" class="pwd-error v-hidden">Digite seu nome!</p>
+    <p id="regError" class="form-error v-hidden"></p>
     <button class="btn-enter-app" onclick="doRegister()">Criar conta! 🎉</button>
-  </div>
-
-  <!-- View: Senha do aluno -->
-  <div id="viewPassword" class="eco-card eco-card-col v-hidden">
-    <button class="back-pill" onclick="showView('students')">← Voltar</button>
-    <span id="selEmoji" class="sel-emoji"></span>
-    <h2 id="selName" class="sel-name"></h2>
-    <p class="sel-hint">Digite sua senha secreta</p>
-    <div class="form-group" style="width:100%;text-align:left">
-      <label for="pwdInput">Senha</label>
-      <input type="password" id="pwdInput" placeholder="••••"
-             autocomplete="off" onkeydown="if(event.key==='Enter')submitLogin()">
-    </div>
-    <p id="pwdError" class="pwd-error v-hidden">Senha incorreta! Tente novamente.</p>
-    <button class="btn-enter-app" onclick="submitLogin()">Entrar no app!</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -223,52 +168,19 @@
   <script src="js/app.js"></script>
   <script>
     const AVATARS = ['🐸','🦋','🌻','🦊','🐬','🐢','🐹','🐧','🐝','🦜'];
-    let currentStudentId = null;
     let selectedRegAvatar = AVATARS[0];
-    let afterClassroom = 'students';
 
     function showView(name) {
       document.querySelectorAll('[id^="view"]').forEach(el => el.classList.add('v-hidden'));
       document.getElementById('view' + name[0].toUpperCase() + name.slice(1)).classList.remove('v-hidden');
     }
 
-    function checkClassroom(goTo) {
-      afterClassroom = goTo;
-      const teacher = VS.getTeacher();
-      if (teacher && teacher.classroom) {
-        document.getElementById('classroomInput').value = '';
-        document.getElementById('classroomError').classList.add('v-hidden');
-        showView('classroom');
-        setTimeout(() => document.getElementById('classroomInput').focus(), 300);
-      } else {
-        goTo === 'register' ? openRegister() : openStudents();
-      }
-    }
-
-    function goLogin()    { checkClassroom('students'); }
-    function goRegister() { checkClassroom('register'); }
-
-    function submitClassroom() {
-      const teacher = VS.getTeacher();
-      const entered = document.getElementById('classroomInput').value.trim();
-      if (!teacher || entered !== String(teacher.classroom)) {
-        const inp = document.getElementById('classroomInput');
-        inp.classList.add('shake');
-        setTimeout(() => inp.classList.remove('shake'), 500);
-        document.getElementById('classroomError').classList.remove('v-hidden');
-        return;
-      }
-      afterClassroom === 'register' ? openRegister() : openStudents();
-    }
-
-    function backFrom(view) {
-      const teacher = VS.getTeacher();
-      showView(teacher && teacher.classroom ? 'classroom' : 'landing');
-    }
-
-    function openStudents() {
-      renderAvatars();
-      showView('students');
+    function openLogin() {
+      document.getElementById('loginName').value = '';
+      document.getElementById('loginPwd').value = '';
+      document.getElementById('loginError').classList.add('v-hidden');
+      showView('login');
+      setTimeout(() => document.getElementById('loginName').focus(), 300);
     }
 
     function openRegister() {
@@ -277,11 +189,12 @@
         `<button class="reg-avatar-btn${a === selectedRegAvatar ? ' selected' : ''}"
                  onclick="pickRegAvatar('${a}')">${a}</button>`
       ).join('');
+      document.getElementById('regSchool').value = '';
       document.getElementById('regName').value = '';
       document.getElementById('regPwd').value = '';
       document.getElementById('regError').classList.add('v-hidden');
       showView('register');
-      setTimeout(() => document.getElementById('regName').focus(), 300);
+      setTimeout(() => document.getElementById('regSchool').focus(), 300);
     }
 
     function pickRegAvatar(a) {
@@ -291,63 +204,71 @@
       });
     }
 
+    function doLogin() {
+      const name  = document.getElementById('loginName').value.trim();
+      const pwd   = document.getElementById('loginPwd').value;
+      const errEl = document.getElementById('loginError');
+
+      if (!name) {
+        errEl.textContent = 'Digite seu nome!';
+        errEl.classList.remove('v-hidden');
+        document.getElementById('loginName').focus();
+        return;
+      }
+
+      const student = VS.getStudents().find(
+        s => s.name.toLowerCase() === name.toLowerCase()
+      );
+
+      if (!student) {
+        errEl.textContent = 'Aluno não encontrado!';
+        errEl.classList.remove('v-hidden');
+        const inp = document.getElementById('loginName');
+        inp.classList.add('shake');
+        setTimeout(() => inp.classList.remove('shake'), 500);
+        return;
+      }
+
+      if (student.password && student.password !== pwd) {
+        errEl.textContent = 'Senha incorreta!';
+        errEl.classList.remove('v-hidden');
+        const inp = document.getElementById('loginPwd');
+        inp.classList.add('shake');
+        setTimeout(() => inp.classList.remove('shake'), 500);
+        return;
+      }
+
+      errEl.classList.add('v-hidden');
+      VS.setCurrentStudent(student.id);
+      window.location.href = 'home.html';
+    }
+
     function doRegister() {
-      const name  = document.getElementById('regName').value.trim();
-      const pwd   = document.getElementById('regPwd').value.trim();
-      const errEl = document.getElementById('regError');
+      const school = document.getElementById('regSchool').value.trim();
+      const name   = document.getElementById('regName').value.trim();
+      const pwd    = document.getElementById('regPwd').value.trim();
+      const errEl  = document.getElementById('regError');
+
       if (!name) {
         errEl.textContent = 'Digite seu nome!';
         errEl.classList.remove('v-hidden');
         document.getElementById('regName').focus();
         return;
       }
+
+      const exists = VS.getStudents().some(
+        s => s.name.toLowerCase() === name.toLowerCase()
+      );
+      if (exists) {
+        errEl.textContent = 'Esse nome já está em uso. Escolha outro!';
+        errEl.classList.remove('v-hidden');
+        document.getElementById('regName').focus();
+        return;
+      }
+
       errEl.classList.add('v-hidden');
-      const student = VS.createStudent(name, selectedRegAvatar, pwd);
+      const student = VS.createStudent(name, selectedRegAvatar, pwd, school);
       VS.setCurrentStudent(student.id);
-      window.location.href = 'home.html';
-    }
-
-    function renderAvatars() {
-      const students = VS.getStudents();
-      const grid = document.getElementById('avatarsGrid');
-      if (students.length === 0) {
-        grid.innerHTML = `<p class="no-students-msg">
-          Nenhum aluno ainda.<br>Volte e clique em <strong>Cadastrar</strong>!
-        </p>`;
-        return;
-      }
-      grid.innerHTML = students.map(s => `
-        <button class="avatar-btn" onclick="selectStudent('${s.id}')">
-          <span class="avatar-btn-emoji">${s.avatar}</span>
-          <span class="avatar-btn-name">${s.name.split(' ')[0]}</span>
-        </button>
-      `).join('');
-    }
-
-    function selectStudent(id) {
-      const s = VS.getStudents().find(st => st.id === id);
-      if (!s) return;
-      currentStudentId = id;
-      document.getElementById('selEmoji').textContent = s.avatar;
-      document.getElementById('selName').textContent = s.name.split(' ')[0];
-      document.getElementById('pwdInput').value = '';
-      document.getElementById('pwdError').classList.add('v-hidden');
-      showView('password');
-      setTimeout(() => document.getElementById('pwdInput').focus(), 300);
-    }
-
-    function submitLogin() {
-      const s = VS.getStudents().find(st => st.id === currentStudentId);
-      if (!s) return;
-      const entered = document.getElementById('pwdInput').value;
-      if (s.password && s.password !== entered) {
-        const inp = document.getElementById('pwdInput');
-        inp.classList.add('shake');
-        setTimeout(() => inp.classList.remove('shake'), 500);
-        document.getElementById('pwdError').classList.remove('v-hidden');
-        return;
-      }
-      VS.setCurrentStudent(currentStudentId);
       window.location.href = 'home.html';
     }
 

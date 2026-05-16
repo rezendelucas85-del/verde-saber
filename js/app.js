@@ -61,12 +61,13 @@ const VS = {
     }
   },
 
-  createStudent(name, avatar, password) {
+  createStudent(name, avatar, password, school) {
     const student = {
       id: Date.now().toString(),
       name: name.trim(),
       avatar,
       password: password || '',
+      school: school ? school.trim() : '',
       createdAt: Date.now(),
       lastActive: null,
       level: 1,
